@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Components Basics | Hexo</title>
+  <meta name="description" content="Base ExampleHere’s an example of a Vue component: 123456789&#x2F;&#x2F; Define a new component called button-counterVue.component(&#39;button-counter&#39;, &amp;#123;  data: function () &amp;#123;    return &amp;#123;      count:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Components Basics">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/11components/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Base ExampleHere’s an example of a Vue component: 123456789&#x2F;&#x2F; Define a new component called button-counterVue.component(&#39;button-counter&#39;, &amp;#123;  data: function () &amp;#123;    return &amp;#123;      count:">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/images/components.png">
+<meta property="article:published_time" content="2020-06-28T08:46:29.511Z">
+<meta property="article:modified_time" content="2020-06-28T08:46:29.511Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/images/components.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/11components/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/d/">d</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%9D%82%E7%83%A9/">大杂烩</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/" rel="tag">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/document/" rel="tag">document</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hex/" rel="tag">hex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mock/" rel="tag">mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag">插件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag">软件</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/daily/" style="font-size: 14px;">daily</a> <a href="/tags/document/" style="font-size: 13px;">document</a> <a href="/tags/hex/" style="font-size: 13px;">hex</a> <a href="/tags/mock/" style="font-size: 13px;">mock</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 13px;">插件</a> <a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">测试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 13px;">软件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">75</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README.en/" class="title">docs/README.en</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README/" class="title">docs/README</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/d/">d</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E5%B7%A5%E5%85%B7/%E6%96%87%E6%A1%A3/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E5%92%8C%E6%96%87%E6%A1%A3/" class="title">hexo搭建博客和文档</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T15:01:41.000Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98/%E8%B0%83%E4%BC%98/" class="title">docs/系统调优/调优</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E8%BF%90%E7%BB%B4/mac/Mac%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" class="title">docs/运维/mac/Mac软件列表</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-docs/前端/vue/vue-guide/md/11components" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Components Basics
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/11components/" class="article-date">
+	  <time datetime="2020-06-28T08:46:29.511Z" itemprop="datePublished">2020-06-28</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/11components/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Base-Example"><a href="#Base-Example" class="headerlink" title="Base Example"></a>Base Example</h2><p>Here’s an example of a Vue component:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Define a new component called button-counter</span></span><br><span class="line">Vue.component(<span class="string">'button-counter'</span>, &#123;</span><br><span class="line">  data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      count: <span class="number">0</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  template: <span class="string">'&lt;button v-on:click="count++"&gt;You clicked me &#123;&#123; count &#125;&#125; times.&lt;/button&gt;'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Components are reusable Vue instances with a name: in this case, <code>&lt;button-counter&gt;</code>. We can use this component as a custom element inside a root Vue instance created with <code>new Vue</code>:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"components-demo"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button-counter</span>&gt;</span><span class="tag">&lt;/<span class="name">button-counter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123; <span class="attr">el</span>: <span class="string">'#components-demo'</span> &#125;)</span><br></pre></td></tr></table></figure>
+
+
+<div id="components-demo" class="demo">
+  <button-counter></button-counter>
+</div>
+<script>
+Vue.component('button-counter', {
+  data: function () {
+    return {
+      count: 0
+    }
+  },
+  template: '<button v-on:click="count += 1">You clicked me {{ count }} times.</button>'
+})
+new Vue({ el: '#components-demo' })
+</script>
+
+
+<p>Since components are reusable Vue instances, they accept the same options as <code>new Vue</code>, such as <code>data</code>, <code>computed</code>, <code>watch</code>, <code>methods</code>, and lifecycle hooks. The only exceptions are a few root-specific options like <code>el</code>.</p>
+<h2 id="Reusing-Components"><a href="#Reusing-Components" class="headerlink" title="Reusing Components"></a>Reusing Components</h2><p>Components can be reused as many times as you want:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"components-demo"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button-counter</span>&gt;</span><span class="tag">&lt;/<span class="name">button-counter</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button-counter</span>&gt;</span><span class="tag">&lt;/<span class="name">button-counter</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">button-counter</span>&gt;</span><span class="tag">&lt;/<span class="name">button-counter</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<div id="components-demo2" class="demo">
+  <button-counter></button-counter>
+  <button-counter></button-counter>
+  <button-counter></button-counter>
+</div>
+<script>
+new Vue({ el: '#components-demo2' })
+</script>
+
+
+<p>Notice that when clicking on the buttons, each one maintains its own, separate <code>count</code>. That’s because each time you use a component, a new <strong>instance</strong> of it is created.</p>
+<h3 id="data-Must-Be-a-Function"><a href="#data-Must-Be-a-Function" class="headerlink" title="data Must Be a Function"></a><code>data</code> Must Be a Function</h3><p>When we defined the <code>&lt;button-counter&gt;</code> component, you may have noticed that <code>data</code> wasn’t directly provided an object, like this:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">data: &#123;</span><br><span class="line">  count: <span class="number">0</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Instead, <strong>a component’s <code>data</code> option must be a function</strong>, so that each instance can maintain an independent copy of the returned data object:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    count: <span class="number">0</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If Vue didn’t have this rule, clicking on one button would affect the data of <em>all other instances</em>, like below:</p>
+
+<div id="components-demo3" class="demo">
+  <button-counter2></button-counter2>
+  <button-counter2></button-counter2>
+  <button-counter2></button-counter2>
+</div>
+<script>
+var buttonCounter2Data = {
+  count: 0
+}
+Vue.component('button-counter2', {
+  data: function () {
+    return buttonCounter2Data
+  },
+  template: '<button v-on:click="count++">You clicked me {{ count }} times.</button>'
+})
+new Vue({ el: '#components-demo3' })
+</script>
+
+
+<h2 id="Organizing-Components"><a href="#Organizing-Components" class="headerlink" title="Organizing Components"></a>Organizing Components</h2><p>It’s common for an app to be organized into a tree of nested components:</p>
+<p><img src="/images/components.png" alt="Component Tree"></p>
+<p>For example, you might have components for a header, sidebar, and content area, each typically containing other components for navigation links, blog posts, etc.</p>
+<p>To use these components in templates, they must be registered so that Vue knows about them. There are two types of component registration: <strong>global</strong> and <strong>local</strong>. So far, we’ve only registered components globally, using <code>Vue.component</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'my-component-name'</span>, &#123;</span><br><span class="line">  <span class="comment">// ... options ...</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Globally registered components can be used in the template of any root Vue instance (<code>new Vue</code>) created afterwards – and even inside all subcomponents of that Vue instance’s component tree.</p>
+<p>That’s all you need to know about registration for now, but once you’ve finished reading this page and feel comfortable with its content, we recommend coming back later to read the full guide on <a href="components-registration.html">Component Registration</a>.</p>
+<h2 id="Passing-Data-to-Child-Components-with-Props"><a href="#Passing-Data-to-Child-Components-with-Props" class="headerlink" title="Passing Data to Child Components with Props"></a>Passing Data to Child Components with Props</h2><p>Earlier, we mentioned creating a component for blog posts. The problem is, that component won’t be useful unless you can pass data to it, such as the title and content of the specific post we want to display. That’s where props come in.</p>
+<p>Props are custom attributes you can register on a component. When a value is passed to a prop attribute, it becomes a property on that component instance. To pass a title to our blog post component, we can include it in the list of props this component accepts, using a <code>props</code> option:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'blog-post'</span>, &#123;</span><br><span class="line">  props: [<span class="string">'title'</span>],</span><br><span class="line">  template: <span class="string">'&lt;h3&gt;&#123;&#123; title &#125;&#125;&lt;/h3&gt;'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>A component can have as many props as you’d like and by default, any value can be passed to any prop. In the template above, you’ll see that we can access this value on the component instance, just like with <code>data</code>.</p>
+<p>Once a prop is registered, you can pass data to it as a custom attribute, like this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blog-post</span> <span class="attr">title</span>=<span class="string">"My journey with Vue"</span>&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">blog-post</span> <span class="attr">title</span>=<span class="string">"Blogging with Vue"</span>&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">blog-post</span> <span class="attr">title</span>=<span class="string">"Why Vue is so fun"</span>&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+<div id="blog-post-demo" class="demo">
+  <blog-post1 title="My journey with Vue"></blog-post1>
+  <blog-post1 title="Blogging with Vue"></blog-post1>
+  <blog-post1 title="Why Vue is so fun"></blog-post1>
+</div>
+<script>
+Vue.component('blog-post1', {
+  props: ['title'],
+  template: '<h3>{{ title }}</h3>'
+})
+new Vue({ el: '#blog-post-demo' })
+</script>
+
+
+<p>In a typical app, however, you’ll likely have an array of posts in <code>data</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#blog-post-demo'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    posts: [</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">1</span>, <span class="attr">title</span>: <span class="string">'My journey with Vue'</span> &#125;,</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">2</span>, <span class="attr">title</span>: <span class="string">'Blogging with Vue'</span> &#125;,</span><br><span class="line">      &#123; <span class="attr">id</span>: <span class="number">3</span>, <span class="attr">title</span>: <span class="string">'Why Vue is so fun'</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Then want to render a component for each one:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blog-post</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-for</span>=<span class="string">"post in posts"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:key</span>=<span class="string">"post.id"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:title</span>=<span class="string">"post.title"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Above, you’ll see that we can use <code>v-bind</code> to dynamically pass props. This is especially useful when you don’t know the exact content you’re going to render ahead of time, like when <a href="https://jsfiddle.net/chrisvfritz/sbLgr0ad" target="_blank" rel="noopener">fetching posts from an API</a>.</p>
+<p>That’s all you need to know about props for now, but once you’ve finished reading this page and feel comfortable with its content, we recommend coming back later to read the full guide on <a href="components-props.html">Props</a>.</p>
+<h2 id="A-Single-Root-Element"><a href="#A-Single-Root-Element" class="headerlink" title="A Single Root Element"></a>A Single Root Element</h2><p>When building out a <code>&lt;blog-post&gt;</code> component, your template will eventually contain more than just the title:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h3</span>&gt;</span>&#123;&#123; title &#125;&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>At the very least, you’ll want to include the post’s content:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">h3</span>&gt;</span>&#123;&#123; title &#125;&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-html</span>=<span class="string">"content"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>If you try this in your template however, Vue will show an error, explaining that <strong>every component must have a single root element</strong>. You can fix this error by wrapping the template in a parent element, such as:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"blog-post"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">h3</span>&gt;</span>&#123;&#123; title &#125;&#125;<span class="tag">&lt;/<span class="name">h3</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">v-html</span>=<span class="string">"content"</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>As our component grows, it’s likely we’ll not only need the title and content of a post, but also the published date, comments, and more. Defining a prop for each related piece of information could become very annoying:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blog-post</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-for</span>=<span class="string">"post in posts"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:key</span>=<span class="string">"post.id"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:title</span>=<span class="string">"post.title"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:content</span>=<span class="string">"post.content"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:publishedAt</span>=<span class="string">"post.publishedAt"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:comments</span>=<span class="string">"post.comments"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>So this might be a good time to refactor the <code>&lt;blog-post&gt;</code> component to accept a single <code>post</code> prop instead:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blog-post</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-for</span>=<span class="string">"post in posts"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:key</span>=<span class="string">"post.id"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:post</span>=<span class="string">"post"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'blog-post'</span>, &#123;</span><br><span class="line">  props: [<span class="string">'post'</span>],</span><br><span class="line">  template: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;div class="blog-post"&gt;</span></span><br><span class="line"><span class="string">      &lt;h3&gt;&#123;&#123; post.title &#125;&#125;&lt;/h3&gt;</span></span><br><span class="line"><span class="string">      &lt;div v-html="post.content"&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p class="tip">The above example and some future ones use JavaScript's [template literal](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals) to make multi-line templates more readable. These are not supported by Internet Explorer (IE), so if you must support IE and are not transpiling (e.g. with Babel or TypeScript), use [newline escapes](https://css-tricks.com/snippets/javascript/multiline-string-variables-in-javascript/) instead.</p>
+
+<p>Now, whenever a new property is added to <code>post</code> objects, it will automatically be available inside <code>&lt;blog-post&gt;</code>.</p>
+<h2 id="Listening-to-Child-Components-Events"><a href="#Listening-to-Child-Components-Events" class="headerlink" title="Listening to Child Components Events"></a>Listening to Child Components Events</h2><p>As we develop our <code>&lt;blog-post&gt;</code> component, some features may require communicating back up to the parent. For example, we may decide to include an accessibility feature to enlarge the text of blog posts, while leaving the rest of the page its default size:</p>
+<p>In the parent, we can support this feature by adding a <code>postFontSize</code> data property:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#blog-posts-events-demo'</span>,</span><br><span class="line">  data: &#123;</span><br><span class="line">    posts: [<span class="comment">/* ... */</span>],</span><br><span class="line">    postFontSize: <span class="number">1</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Which can be used in the template to control the font size of all blog posts:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">"blog-posts-events-demo"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">:style</span>=<span class="string">"&#123; fontSize: postFontSize + 'em' &#125;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">blog-post</span></span></span><br><span class="line"><span class="tag">      <span class="attr">v-for</span>=<span class="string">"post in posts"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">v-bind:key</span>=<span class="string">"post.id"</span></span></span><br><span class="line"><span class="tag">      <span class="attr">v-bind:post</span>=<span class="string">"post"</span></span></span><br><span class="line"><span class="tag">    &gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Now let’s add a button to enlarge the text right before the content of every post:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'blog-post'</span>, &#123;</span><br><span class="line">  props: [<span class="string">'post'</span>],</span><br><span class="line">  template: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;div class="blog-post"&gt;</span></span><br><span class="line"><span class="string">      &lt;h3&gt;&#123;&#123; post.title &#125;&#125;&lt;/h3&gt;</span></span><br><span class="line"><span class="string">      &lt;button&gt;</span></span><br><span class="line"><span class="string">        Enlarge text</span></span><br><span class="line"><span class="string">      &lt;/button&gt;</span></span><br><span class="line"><span class="string">      &lt;div v-html="post.content"&gt;&lt;/div&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>The problem is, this button doesn’t do anything:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span>&gt;</span></span><br><span class="line">  Enlarge text</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>When we click on the button, we need to communicate to the parent that it should enlarge the text of all posts. Fortunately, Vue instances provide a custom events system to solve this problem. The parent can choose to listen to any event on the child component instance with <code>v-on</code>, just as we would with a native DOM event:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blog-post</span></span></span><br><span class="line"><span class="tag">  <span class="attr">...</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-on:enlarge-text</span>=<span class="string">"postFontSize += 0.1"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Then the child component can emit an event on itself by calling the built-in <a href="../api/#vm-emit"><strong><code>$emit</code></strong> method</a>, passing the name of the event:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">"$emit('enlarge-text')"</span>&gt;</span></span><br><span class="line">  Enlarge text</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Thanks to the <code>v-on:enlarge-text=&quot;postFontSize += 0.1&quot;</code> listener, the parent will receive the event and update <code>postFontSize</code> value.</p>
+
+<div id="blog-posts-events-demo" class="demo">
+  <div :style="{ fontSize: postFontSize + 'em' }">
+    <blog-post
+      v-for="post in posts"
+      v-bind:key="post.id"
+      v-bind:post="post"
+      v-on:enlarge-text="postFontSize += 0.1"
+    ></blog-post>
+  </div>
+</div>
+<script>
+Vue.component('blog-post', {
+  props: ['post'],
+  template: '\
+    <div class="blog-post">\
+      <h3>{{ post.title }}</h3>\
+      <button v-on:click="$emit(\'enlarge-text\')">\
+        Enlarge text\
+      </button>\
+      <div v-html="post.content"></div>\
+    </div>\
+  '
+})
+new Vue({
+  el: '#blog-posts-events-demo',
+  data: {
+    posts: [
+      { id: 1, title: 'My journey with Vue', content: '...content...' },
+      { id: 2, title: 'Blogging with Vue', content: '...content...' },
+      { id: 3, title: 'Why Vue is so fun', content: '...content...' }
+    ],
+    postFontSize: 1
+  }
+})
+</script>
+
+
+<h3 id="Emitting-a-Value-With-an-Event"><a href="#Emitting-a-Value-With-an-Event" class="headerlink" title="Emitting a Value With an Event"></a>Emitting a Value With an Event</h3><p>It’s sometimes useful to emit a specific value with an event. For example, we may want the <code>&lt;blog-post&gt;</code> component to be in charge of how much to enlarge the text by. In those cases, we can use <code>$emit</code>‘s 2nd parameter to provide this value:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">button</span> <span class="attr">v-on:click</span>=<span class="string">"$emit('enlarge-text', 0.1)"</span>&gt;</span></span><br><span class="line">  Enlarge text</span><br><span class="line"><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Then when we listen to the event in the parent, we can access the emitted event’s value with <code>$event</code>:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blog-post</span></span></span><br><span class="line"><span class="tag">  <span class="attr">...</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-on:enlarge-text</span>=<span class="string">"postFontSize += $event"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Or, if the event handler is a method:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">blog-post</span></span></span><br><span class="line"><span class="tag">  <span class="attr">...</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-on:enlarge-text</span>=<span class="string">"onEnlargeText"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">blog-post</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Then the value will be passed as the first parameter of that method:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">methods: &#123;</span><br><span class="line">  onEnlargeText: <span class="function"><span class="keyword">function</span> (<span class="params">enlargeAmount</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.postFontSize += enlargeAmount</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Using-v-model-on-Components"><a href="#Using-v-model-on-Components" class="headerlink" title="Using v-model on Components"></a>Using <code>v-model</code> on Components</h3><p>Custom events can also be used to create custom inputs that work with <code>v-model</code>. Remember that:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">"searchText"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>does the same thing as:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:value</span>=<span class="string">"searchText"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-on:input</span>=<span class="string">"searchText = $event.target.value"</span></span></span><br><span class="line"><span class="tag">&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>When used on a component, <code>v-model</code> instead does this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">custom-input</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-bind:value</span>=<span class="string">"searchText"</span></span></span><br><span class="line"><span class="tag">  <span class="attr">v-on:input</span>=<span class="string">"searchText = $event"</span></span></span><br><span class="line"><span class="tag">&gt;</span><span class="tag">&lt;/<span class="name">custom-input</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>For this to actually work though, the <code>&lt;input&gt;</code> inside the component must:</p>
+<ul>
+<li>Bind the <code>value</code> attribute to a <code>value</code> prop</li>
+<li>On <code>input</code>, emit its own custom <code>input</code> event with the new value</li>
+</ul>
+<p>Here’s that in action:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'custom-input'</span>, &#123;</span><br><span class="line">  props: [<span class="string">'value'</span>],</span><br><span class="line">  template: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;input</span></span><br><span class="line"><span class="string">      v-bind:value="value"</span></span><br><span class="line"><span class="string">      v-on:input="$emit('input', $event.target.value)"</span></span><br><span class="line"><span class="string">    &gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Now <code>v-model</code> should work perfectly with this component:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">custom-input</span> <span class="attr">v-model</span>=<span class="string">"searchText"</span>&gt;</span><span class="tag">&lt;/<span class="name">custom-input</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>That’s all you need to know about custom component events for now, but once you’ve finished reading this page and feel comfortable with its content, we recommend coming back later to read the full guide on <a href="components-custom-events.html">Custom Events</a>.</p>
+<h2 id="Content-Distribution-with-Slots"><a href="#Content-Distribution-with-Slots" class="headerlink" title="Content Distribution with Slots"></a>Content Distribution with Slots</h2><p>Just like with HTML elements, it’s often useful to be able to pass content to a component, like this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">alert-box</span>&gt;</span></span><br><span class="line">  Something bad happened.</span><br><span class="line"><span class="tag">&lt;/<span class="name">alert-box</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Which might render something like:</p>
+
+<div id="slots-demo" class="demo">
+  <alert-box>
+    Something bad happened.
+  </alert-box>
+</div>
+<script>
+Vue.component('alert-box', {
+  template: '\
+    <div class="demo-alert-box">\
+      <strong>Error!</strong>\
+      <slot></slot>\
+    </div>\
+  '
+})
+new Vue({ el: '#slots-demo' })
+</script>
+<style>
+.demo-alert-box {
+  padding: 10px 20px;
+  background: #f3beb8;
+  border: 1px solid #f09898;
+}
+</style>
+
+
+<p>Fortunately, this task is made very simple by Vue’s custom <code>&lt;slot&gt;</code> element:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'alert-box'</span>, &#123;</span><br><span class="line">  template: <span class="string">`</span></span><br><span class="line"><span class="string">    &lt;div class="demo-alert-box"&gt;</span></span><br><span class="line"><span class="string">      &lt;strong&gt;Error!&lt;/strong&gt;</span></span><br><span class="line"><span class="string">      &lt;slot&gt;&lt;/slot&gt;</span></span><br><span class="line"><span class="string">    &lt;/div&gt;</span></span><br><span class="line"><span class="string">  `</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>As you’ll see above, we just add the slot where we want it to go – and that’s it. We’re done!</p>
+<p>That’s all you need to know about slots for now, but once you’ve finished reading this page and feel comfortable with its content, we recommend coming back later to read the full guide on <a href="components-slots.html">Slots</a>.</p>
+<h2 id="Dynamic-Components"><a href="#Dynamic-Components" class="headerlink" title="Dynamic Components"></a>Dynamic Components</h2><p>Sometimes, it’s useful to dynamically switch between components, like in a tabbed interface:</p>
+
+<div id="dynamic-component-demo" class="demo">
+  <button
+    v-for="tab in tabs"
+    v-bind:key="tab"
+    class="dynamic-component-demo-tab-button"
+    v-bind:class="{ 'dynamic-component-demo-tab-button-active': tab === currentTab }"
+    v-on:click="currentTab = tab"
+  >
+    {{ tab }}
+  </button>
+  <component
+    v-bind:is="currentTabComponent"
+    class="dynamic-component-demo-tab"
+  ></component>
+</div>
+<script>
+Vue.component('tab-home', { template: '<div>Home component</div>' })
+Vue.component('tab-posts', { template: '<div>Posts component</div>' })
+Vue.component('tab-archive', { template: '<div>Archive component</div>' })
+new Vue({
+  el: '#dynamic-component-demo',
+  data: {
+    currentTab: 'Home',
+    tabs: ['Home', 'Posts', 'Archive']
+  },
+  computed: {
+    currentTabComponent: function () {
+      return 'tab-' + this.currentTab.toLowerCase()
+    }
+  }
+})
+</script>
+<style>
+.dynamic-component-demo-tab-button {
+  padding: 6px 10px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #f0f0f0;
+  margin-bottom: -1px;
+  margin-right: -1px;
+}
+.dynamic-component-demo-tab-button:hover {
+  background: #e0e0e0;
+}
+.dynamic-component-demo-tab-button-active {
+  background: #e0e0e0;
+}
+.dynamic-component-demo-tab {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+</style>
+
+
+<p>The above is made possible by Vue’s <code>&lt;component&gt;</code> element with the <code>is</code> special attribute:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Component changes when currentTabComponent changes --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">component</span> <span class="attr">v-bind:is</span>=<span class="string">"currentTabComponent"</span>&gt;</span><span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>In the example above, <code>currentTabComponent</code> can contain either:</p>
+<ul>
+<li>the name of a registered component, or</li>
+<li>a component’s options object</li>
+</ul>
+<p>See <a href="https://jsfiddle.net/chrisvfritz/o3nycadu/" target="_blank" rel="noopener">this fiddle</a> to experiment with the full code, or <a href="https://jsfiddle.net/chrisvfritz/b2qj69o1/" target="_blank" rel="noopener">this version</a> for an example binding to a component’s options object, instead of its registered name.</p>
+<p>That’s all you need to know about dynamic components for now, but once you’ve finished reading this page and feel comfortable with its content, we recommend coming back later to read the full guide on <a href="components-dynamic-async.html">Dynamic &amp; Async Components</a>.</p>
+<h2 id="DOM-Template-Parsing-Caveats"><a href="#DOM-Template-Parsing-Caveats" class="headerlink" title="DOM Template Parsing Caveats"></a>DOM Template Parsing Caveats</h2><p>Some HTML elements, such as <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, <code>&lt;table&gt;</code> and <code>&lt;select&gt;</code> have restrictions on what elements can appear inside them, and some elements such as <code>&lt;li&gt;</code>, <code>&lt;tr&gt;</code>, and <code>&lt;option&gt;</code> can only appear inside certain other elements.</p>
+<p>This will lead to issues when using components with elements that have such restrictions. For example:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">blog-post-row</span>&gt;</span><span class="tag">&lt;/<span class="name">blog-post-row</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>The custom component <code>&lt;blog-post-row&gt;</code> will be hoisted out as invalid content, causing errors in the eventual rendered output. Fortunately, the <code>is</code> special attribute offers a workaround:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">table</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">tr</span> <span class="attr">is</span>=<span class="string">"blog-post-row"</span>&gt;</span><span class="tag">&lt;/<span class="name">tr</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>It should be noted that <strong>this limitation does <em>not</em> apply if you are using string templates from one of the following sources</strong>:</p>
+<ul>
+<li>String templates (e.g. <code>template: &#39;...&#39;</code>)</li>
+<li><a href="single-file-components.html">Single-file (<code>.vue</code>) components</a></li>
+<li><a href="components-edge-cases.html#X-Templates"><code>&lt;script type=&quot;text/x-template&quot;&gt;</code></a></li>
+</ul>
+<p>That’s all you need to know about DOM template parsing caveats for now – and actually, the end of Vue’s <em>Essentials</em>. Congratulations! There’s still more to learn, but first, we recommend taking a break to play with Vue yourself and build something fun.</p>
+<p>Once you feel comfortable with the knowledge you’ve just digested, we recommend coming back to read the full guide on <a href="components-dynamic-async.html">Dynamic &amp; Async Components</a>, as well as the other pages in the Components In-Depth section of the sidebar.</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/11components/" title="Components Basics" target="_blank" rel="external">http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/11components/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/10forms/" title="Form Input Bindings"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/12components-registration/" title="Component Registration"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

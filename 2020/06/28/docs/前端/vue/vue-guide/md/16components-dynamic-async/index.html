@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Dynamic &amp; Async Components | Hexo</title>
+  <meta name="description" content="This page assumes you’ve already read the Components Basics. Read that first if you are new to components.  keep-alive with Dynamic ComponentsEarlier, we used the is attribute to switch between compo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dynamic &amp; Async Components">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/16components-dynamic-async/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="This page assumes you’ve already read the Components Basics. Read that first if you are new to components.  keep-alive with Dynamic ComponentsEarlier, we used the is attribute to switch between compo">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-28T08:46:29.512Z">
+<meta property="article:modified_time" content="2020-06-28T08:46:29.512Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/16components-dynamic-async/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/d/">d</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%9D%82%E7%83%A9/">大杂烩</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/" rel="tag">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/document/" rel="tag">document</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hex/" rel="tag">hex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mock/" rel="tag">mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag">插件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag">软件</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/daily/" style="font-size: 14px;">daily</a> <a href="/tags/document/" style="font-size: 13px;">document</a> <a href="/tags/hex/" style="font-size: 13px;">hex</a> <a href="/tags/mock/" style="font-size: 13px;">mock</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 13px;">插件</a> <a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">测试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 13px;">软件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">75</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README.en/" class="title">docs/README.en</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README/" class="title">docs/README</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/d/">d</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E5%B7%A5%E5%85%B7/%E6%96%87%E6%A1%A3/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E5%92%8C%E6%96%87%E6%A1%A3/" class="title">hexo搭建博客和文档</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T15:01:41.000Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98/%E8%B0%83%E4%BC%98/" class="title">docs/系统调优/调优</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E8%BF%90%E7%BB%B4/mac/Mac%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" class="title">docs/运维/mac/Mac软件列表</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-docs/前端/vue/vue-guide/md/16components-dynamic-async" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Dynamic &amp; Async Components
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/16components-dynamic-async/" class="article-date">
+	  <time datetime="2020-06-28T08:46:29.512Z" itemprop="datePublished">2020-06-28</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/16components-dynamic-async/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <blockquote>
+<p>This page assumes you’ve already read the <a href="components.html">Components Basics</a>. Read that first if you are new to components.</p>
+</blockquote>
+<h2 id="keep-alive-with-Dynamic-Components"><a href="#keep-alive-with-Dynamic-Components" class="headerlink" title="keep-alive with Dynamic Components"></a><code>keep-alive</code> with Dynamic Components</h2><p>Earlier, we used the <code>is</code> attribute to switch between components in a tabbed interface:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">component</span> <span class="attr">v-bind:is</span>=<span class="string">"currentTabComponent"</span>&gt;</span><span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>When switching between these components though, you’ll sometimes want to maintain their state or avoid re-rendering for performance reasons. For example, when expanding our tabbed interface a little:</p>
+
+<div id="dynamic-component-demo" class="demo">
+  <button
+    v-for="tab in tabs"
+    v-bind:key="tab"
+    v-bind:class="['dynamic-component-demo-tab-button', { 'dynamic-component-demo-active': currentTab === tab }]"
+    v-on:click="currentTab = tab"
+  >{{ tab }}</button>
+  <component
+    v-bind:is="currentTabComponent"
+    class="dynamic-component-demo-tab"
+  ></component>
+</div>
+<script>
+Vue.component('tab-posts', {
+  data: function () {
+    return {
+      posts: [
+        {
+          id: 1,
+          title: 'Cat Ipsum',
+          content: '<p>Dont wait for the storm to pass, dance in the rain kick up litter decide to want nothing to do with my owner today demand to be let outside at once, and expect owner to wait for me as i think about it cat cat moo moo lick ears lick paws so make meme, make cute face but lick the other cats. Kitty poochy chase imaginary bugs, but stand in front of the computer screen. Sweet beast cat dog hate mouse eat string barf pillow no baths hate everything stare at guinea pigs. My left donut is missing, as is my right loved it, hated it, loved it, hated it scoot butt on the rug cat not kitten around</p>'
+        },
+        {
+          id: 2,
+          title: 'Hipster Ipsum',
+          content: '<p>Bushwick blue bottle scenester helvetica ugh, meh four loko. Put a bird on it lumbersexual franzen shabby chic, street art knausgaard trust fund shaman scenester live-edge mixtape taxidermy viral yuccie succulents. Keytar poke bicycle rights, crucifix street art neutra air plant PBR&B hoodie plaid venmo. Tilde swag art party fanny pack vinyl letterpress venmo jean shorts offal mumblecore. Vice blog gentrify mlkshk tattooed occupy snackwave, hoodie craft beer next level migas 8-bit chartreuse. Trust fund food truck drinking vinegar gochujang.</p>'
+        },
+        {
+          id: 3,
+          title: 'Cupcake Ipsum',
+          content: '<p>Icing dessert soufflé lollipop chocolate bar sweet tart cake chupa chups. Soufflé marzipan jelly beans croissant toffee marzipan cupcake icing fruitcake. Muffin cake pudding soufflé wafer jelly bear claw sesame snaps marshmallow. Marzipan soufflé croissant lemon drops gingerbread sugar plum lemon drops apple pie gummies. Sweet roll donut oat cake toffee cake. Liquorice candy macaroon toffee cookie marzipan.</p>'
+        }
+      ],
+      selectedPost: null
+    }
+  },
+  template: '\
+    <div class="dynamic-component-demo-posts-tab">\
+      <ul class="dynamic-component-demo-posts-sidebar">\
+        <li\
+          v-for="post in posts"\
+          v-bind:key="post.id"\
+          v-bind:class="{ \'dynamic-component-demo-active\': post === selectedPost }"\
+          v-on:click="selectedPost = post"\
+        >\
+          {{ post.title }}\
+        </li>\
+      </ul>\
+      <div class="dynamic-component-demo-post-container">\
+        <div \
+          v-if="selectedPost"\
+          class="dynamic-component-demo-post"\
+        >\
+          <h3>{{ selectedPost.title }}</h3>\
+          <div v-html="selectedPost.content"></div>\
+        </div>\
+        <strong v-else>\
+          Click on a blog title to the left to view it.\
+        </strong>\
+      </div>\
+    </div>\
+  '
+})
+Vue.component('tab-archive', {
+  template: '<div>Archive component</div>'
+})
+new Vue({
+  el: '#dynamic-component-demo',
+  data: {
+    currentTab: 'Posts',
+    tabs: ['Posts', 'Archive']
+  },
+  computed: {
+    currentTabComponent: function () {
+      return 'tab-' + this.currentTab.toLowerCase()
+    }
+  }
+})
+</script>
+<style>
+.dynamic-component-demo-tab-button {
+  padding: 6px 10px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  background: #f0f0f0;
+  margin-bottom: -1px;
+  margin-right: -1px;
+}
+.dynamic-component-demo-tab-button:hover {
+  background: #e0e0e0;
+}
+.dynamic-component-demo-tab-button.dynamic-component-demo-active {
+  background: #e0e0e0;
+}
+.dynamic-component-demo-tab {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.dynamic-component-demo-posts-tab {
+  display: flex;
+}
+.dynamic-component-demo-posts-sidebar {
+  max-width: 40vw;
+  margin: 0 !important;
+  padding: 0 10px 0 0 !important;
+  list-style-type: none;
+  border-right: 1px solid #ccc;
+}
+.dynamic-component-demo-posts-sidebar li {
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  cursor: pointer;
+}
+.dynamic-component-demo-posts-sidebar li:hover {
+  background: #eee;
+}
+.dynamic-component-demo-posts-sidebar li.dynamic-component-demo-active {
+  background: lightblue;
+}
+.dynamic-component-demo-post-container {
+  padding-left: 10px;
+}
+.dynamic-component-demo-post > :first-child {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+</style>
+
+
+<p>You’ll notice that if you select a post, switch to the <em>Archive</em> tab, then switch back to <em>Posts</em>, it’s no longer showing the post you selected. That’s because each time you switch to a new tab, Vue creates a new instance of the <code>currentTabComponent</code>.</p>
+<p>Recreating dynamic components is normally useful behavior, but in this case, we’d really like those tab component instances to be cached once they’re created for the first time. To solve this problem, we can wrap our dynamic component with a <code>&lt;keep-alive&gt;</code> element:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Inactive components will be cached! --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">keep-alive</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">component</span> <span class="attr">v-bind:is</span>=<span class="string">"currentTabComponent"</span>&gt;</span><span class="tag">&lt;/<span class="name">component</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">keep-alive</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Check out the result below:</p>
+
+<div id="dynamic-component-keep-alive-demo" class="demo">
+  <button
+    v-for="tab in tabs"
+    v-bind:key="tab"
+    v-bind:class="['dynamic-component-demo-tab-button', { 'dynamic-component-demo-active': currentTab === tab }]"
+    v-on:click="currentTab = tab"
+  >{{ tab }}</button>
+  <keep-alive>
+    <component
+      v-bind:is="currentTabComponent"
+      class="dynamic-component-demo-tab"
+    ></component>
+  </keep-alive>
+</div>
+<script>
+new Vue({
+  el: '#dynamic-component-keep-alive-demo',
+  data: {
+    currentTab: 'Posts',
+    tabs: ['Posts', 'Archive']
+  },
+  computed: {
+    currentTabComponent: function () {
+      return 'tab-' + this.currentTab.toLowerCase()
+    }
+  }
+})
+</script>
+
+
+<p>Now the <em>Posts</em> tab maintains its state (the selected post) even when it’s not rendered. See <a href="https://jsfiddle.net/chrisvfritz/Lp20op9o/" target="_blank" rel="noopener">this fiddle</a> for the complete code.</p>
+<p class="tip">Note that `<keep-alive>` requires the components being switched between to all have names, either using the `name` option on a component, or through local/global registration.</p>
+
+<p>Check out more details on <code>&lt;keep-alive&gt;</code> in the <a href="../api/#keep-alive">API reference</a>.</p>
+<h2 id="Async-Components"><a href="#Async-Components" class="headerlink" title="Async Components"></a>Async Components</h2><p>In large applications, we may need to divide the app into smaller chunks and only load a component from the server when it’s needed. To make that easier, Vue allows you to define your component as a factory function that asynchronously resolves your component definition. Vue will only trigger the factory function when the component needs to be rendered and will cache the result for future re-renders. For example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'async-example'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// Pass the component definition to the resolve callback</span></span><br><span class="line">    resolve(&#123;</span><br><span class="line">      template: <span class="string">'&lt;div&gt;I am async!&lt;/div&gt;'</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;, <span class="number">1000</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>As you can see, the factory function receives a <code>resolve</code> callback, which should be called when you have retrieved your component definition from the server. You can also call <code>reject(reason)</code> to indicate the load has failed. The <code>setTimeout</code> here is for demonstration; how to retrieve the component is up to you. One recommended approach is to use async components together with <a href="https://webpack.js.org/guides/code-splitting/" target="_blank" rel="noopener">Webpack’s code-splitting feature</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(<span class="string">'async-webpack-example'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// This special require syntax will instruct Webpack to</span></span><br><span class="line">  <span class="comment">// automatically split your built code into bundles which</span></span><br><span class="line">  <span class="comment">// are loaded over Ajax requests.</span></span><br><span class="line">  <span class="built_in">require</span>([<span class="string">'./my-async-component'</span>], resolve)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>You can also return a <code>Promise</code> in the factory function, so with Webpack 2 and ES2015 syntax you can do:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Vue.component(</span><br><span class="line">  <span class="string">'async-webpack-example'</span>,</span><br><span class="line">  <span class="comment">// The `import` function returns a Promise.</span></span><br><span class="line">  () =&gt; <span class="keyword">import</span>(<span class="string">'./my-async-component'</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>When using <a href="components-registration.html#Local-Registration">local registration</a>, you can also directly provide a function that returns a <code>Promise</code>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  components: &#123;</span><br><span class="line">    <span class="string">'my-component'</span>: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">import</span>(<span class="string">'./my-async-component'</span>)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p class="tip">If you're a <strong>Browserify</strong> user that would like to use async components, its creator has unfortunately [made it clear](https://github.com/substack/node-browserify/issues/58#issuecomment-21978224) that async loading "is not something that Browserify will ever support." Officially, at least. The Browserify community has found [some workarounds](https://github.com/vuejs/vuejs.org/issues/620), which may be helpful for existing and complex applications. For all other scenarios, we recommend using Webpack for built-in, first-class async support.</p>
+
+<h3 id="Handling-Loading-State"><a href="#Handling-Loading-State" class="headerlink" title="Handling Loading State"></a>Handling Loading State</h3><blockquote>
+<p>New in 2.3.0+</p>
+</blockquote>
+<p>The async component factory can also return an object of the following format:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> AsyncComponent = <span class="function"><span class="params">()</span> =&gt;</span> (&#123;</span><br><span class="line">  <span class="comment">// The component to load (should be a Promise)</span></span><br><span class="line">  component: <span class="keyword">import</span>(<span class="string">'./MyComponent.vue'</span>),</span><br><span class="line">  <span class="comment">// A component to use while the async component is loading</span></span><br><span class="line">  loading: LoadingComponent,</span><br><span class="line">  <span class="comment">// A component to use if the load fails</span></span><br><span class="line">  error: ErrorComponent,</span><br><span class="line">  <span class="comment">// Delay before showing the loading component. Default: 200ms.</span></span><br><span class="line">  delay: <span class="number">200</span>,</span><br><span class="line">  <span class="comment">// The error component will be displayed if a timeout is</span></span><br><span class="line">  <span class="comment">// provided and exceeded. Default: Infinity.</span></span><br><span class="line">  timeout: <span class="number">3000</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Note that you must use <a href="https://github.com/vuejs/vue-router" target="_blank" rel="noopener">Vue Router</a> 2.4.0+ if you wish to use the above syntax for route components.</p>
+</blockquote>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/16components-dynamic-async/" title="Dynamic &amp; Async Components" target="_blank" rel="external">http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/16components-dynamic-async/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/22render-function/" title="Render Functions &amp; JSX"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/15components-slots/" title="Slots"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

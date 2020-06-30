@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Mocks Aren&#39;t Stubs | Hexo</title>
+  <meta name="description" content="Mocks Aren’t Stubs“mock对象”(Mock Objects)是描述在测试中用于mock真实对象的特殊情况对象(special case object)的一个流行术语。大部分的语言环境现在都有可以很方便创建mock对象的框架。然而，通常没有意识到的是，mock对象通常只是一种形式的特殊情况对象，它启用了一种不同风格的测试。在本文中，我将解释mock对象如何工作的，他们如何促进基于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mocks Aren&#39;t Stubs">
+<meta property="og:url" content="http://yoursite.com/2018/07/12/docs/%E6%B5%8B%E8%AF%95/Mocks_Aren't_Stubs/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Mocks Aren’t Stubs“mock对象”(Mock Objects)是描述在测试中用于mock真实对象的特殊情况对象(special case object)的一个流行术语。大部分的语言环境现在都有可以很方便创建mock对象的框架。然而，通常没有意识到的是，mock对象通常只是一种形式的特殊情况对象，它启用了一种不同风格的测试。在本文中，我将解释mock对象如何工作的，他们如何促进基于">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2018-07-12T12:46:25.000Z">
+<meta property="article:modified_time" content="2020-06-30T11:04:59.958Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="mock">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/2018/07/12/docs/%E6%B5%8B%E8%AF%95/Mocks_Aren't_Stubs/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/d/">d</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%9D%82%E7%83%A9/">大杂烩</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/" rel="tag">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/document/" rel="tag">document</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hex/" rel="tag">hex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mock/" rel="tag">mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag">插件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag">软件</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/daily/" style="font-size: 14px;">daily</a> <a href="/tags/document/" style="font-size: 13px;">document</a> <a href="/tags/hex/" style="font-size: 13px;">hex</a> <a href="/tags/mock/" style="font-size: 13px;">mock</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 13px;">插件</a> <a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">测试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 13px;">软件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">75</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README.en/" class="title">docs/README.en</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README/" class="title">docs/README</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/d/">d</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E5%B7%A5%E5%85%B7/%E6%96%87%E6%A1%A3/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E5%92%8C%E6%96%87%E6%A1%A3/" class="title">hexo搭建博客和文档</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T15:01:41.000Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98/%E8%B0%83%E4%BC%98/" class="title">docs/系统调优/调优</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E8%BF%90%E7%BB%B4/mac/Mac%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" class="title">docs/运维/mac/Mac软件列表</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-docs/测试/Mocks_Aren&#39;t_Stubs" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Mocks Aren&#39;t Stubs
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/07/12/docs/%E6%B5%8B%E8%AF%95/Mocks_Aren't_Stubs/" class="article-date">
+	  <time datetime="2018-07-12T12:46:25.000Z" itemprop="datePublished">2018-07-12</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/mock/" rel="tag">mock</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/07/12/docs/%E6%B5%8B%E8%AF%95/Mocks_Aren't_Stubs/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="Mocks-Aren’t-Stubs"><a href="#Mocks-Aren’t-Stubs" class="headerlink" title="Mocks Aren’t Stubs"></a><a href="https://www.cnblogs.com/TracesOfWind/p/3412966.html" target="_blank" rel="noopener">Mocks Aren’t Stubs</a></h2><p>“mock对象”(Mock Objects)是描述在测试中用于mock真实对象的特殊情况对象(special case object)的一个流行术语。大部分的语言环境现在都有可以很方便创建mock对象的框架。然而，通常没有意识到的是，mock对象通常只是一种形式的特殊情况对象，它启用了一种不同风格的测试。在本文中，我将解释mock对象如何工作的，他们如何促进基于行为验证的测试，以及围绕它们的社区如何使用它们开发出不同风格的测试。</p>
+<p>我是几年前在XP(极限编程)社区第一次遇到“mock对象”这个术语的。从那以后，我越来越频繁的遇到mock对象，部分原因是因为很多mock对象的开发先驱是我在ThoughtWorks不同时期的同事，还有部分是因为我经常在XP(极限编程)的影响性的著作中看到它们。</p>
+<p>但是我经常看到对mock对象的描述不佳，特别是，我看到他们混淆mock对象与stub——测试环境中一个常用助手。我很理解这种混淆——因为有一段时间我也看到它们很相似，但是与mock开发者的对话，让我稳固的理解了mock。</p>
+<p>这种差异实际上是两个独立的差异。其中一方面的差异是测试结果是如何验证的：状态验证与行为验证的区别。另一方面是对测试方式与设计共同作用时的一种完全不同的哲学思想，在这里我把它称为传统的和测试驱动开发的Mockist风格。</p>
+<blockquote>
+</blockquote>
+<hr>
+<h2 id="常规测试"><a href="#常规测试" class="headerlink" title="常规测试"></a>常规测试</h2><p>我将通过一个例子来说明两种风格作为开始。我们想要构造一个订单对象，并从一个仓库对象对它进行填充。订单非常简单，只有一个产品和一个数量，仓库持有不同产品的存货清单。当我们要求一个订单从仓库中对它自己进行填充时，会有两种响应。如果仓库中有足够的产品来填充订单，订单将会被填充，并且仓库中该产品的数量会被减少适当的数量。如果仓库中没有足够的产品，那么订单将不会被填充，仓库也将没有变化。</p>
+<p> 这两种行为意味着两种测试，看起来像是非常普通的JUnit测试。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderStateTester</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123; </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String TALISKER = <span class="string">"Talisker"</span>; </span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> String HIGHLAND_PARK = <span class="string">"Highland Park"</span>; </span><br><span class="line">    <span class="keyword">private</span> Warehouse warehouse = <span class="keyword">new</span> WarehouseImpl(); </span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        warehouse.add(TALISKER, <span class="number">50</span>);</span><br><span class="line">        warehouse.add(HIGHLAND_PARK, <span class="number">25</span>);</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrderIsFilledIfEnoughInWarehouse</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">50</span>);</span><br><span class="line">        order.fill(warehouse);</span><br><span class="line">        assertTrue(order.isFilled());</span><br><span class="line">        assertEquals(<span class="number">0</span>, warehouse.getInventory(TALISKER));</span><br><span class="line">    &#125; </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrderDoesNotRemoveIfNotEnough</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);</span><br><span class="line">        order.fill(warehouse);</span><br><span class="line">        assertFalse(order.isFilled());</span><br><span class="line">        assertEquals(<span class="number">50</span>, warehouse.getInventory(TALISKER));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>xUnit测试按找典型的四阶段顺序：启动(setup)，演练(exercise)，验证(verify)，拆卸(teardown)。在本例中，启动阶段部分是在setUp()方法中完成的(设置warehouse)，部分是在测试方法中完成的(设置order)。<em>order.fill(warehouse)</em>方法的调用是演练阶段。在这里，对象按照要求处理，而这正是我们要测试的。assert语句是验证阶段，用于检查演练的方法是否正确执行了它的任务。在本例中，没有显式的拆卸阶段，垃圾回收器将会隐式的为我们处理。</p>
+<p>在启动阶段，我们将两种类型的对象放到一起。Order是我们要测试的类，但是为了<em>order.fill</em>方法能正常工作，我们还需要一个Warehouse的实例。在这种情况下，Order才是我们在测试时需要关注的对象。面向测试的人喜欢使用术语object-under-test或者system-under-test来命名类似这样的事物。这两个术语都很拗口，但是作为一个被广泛接受的术语，我也只能坚持接受并使用。跟Meszaros(Gerard Meszaros)一样，我将使用system-under-test，或者宁愿缩写为SUT。</p>
+<p>到目前为止，这个测试需要一个SUT(Order)和一个协作者(Warehouse)。我需要Warehouse，有两个原因：一个是让测试行为正常工作(因为<em>order.fill</em>调用了一个Warehouse的方法)，第二点是因为验证(因为<em>order.fill</em>的结果之一是潜在改变warehouse的状态)。随着我们进一步深入探讨这个主题，你将会看到我们在SUT和协作者制造很多区别。</p>
+<p>这个测试的风格使用了<strong>状态验证(state verification)</strong>：即演练的方法是否正确的工作，取决于在方法演练后对SUT和协作者的状态的诊断。正如我们所看到的，mock对象启用了一种不同的方式来验证。</p>
+<blockquote>
+<p><strong>标注</strong></p>
+<ul>
+<li>SUT术语  </li>
+<li>典型的unit test：真实的SUT和真实的写作者，通过状态验证的方式验证SUT和协作者的状态。</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="使用mock对象测试"><a href="#使用mock对象测试" class="headerlink" title="使用mock对象测试"></a>使用mock对象测试</h2><p>现在，我将采用相同的行为，并使用mock对象。对于这段代码，我将使用jMock类库来定义mock对象。jMock是一个java对象mock类库，还有很多其它的mock类库，但是到目前为止，这一个是技术原创者编写的类库，所以它将是一个很好的开始。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderInteractionTester</span> <span class="keyword">extends</span> <span class="title">MockObjectTestCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String TALISKER = <span class="string">"Talisker"</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingRemovesInventoryIfInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//setup - data</span></span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">50</span>);</span><br><span class="line">    Mock warehouseMock = <span class="keyword">new</span> Mock(Warehouse<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setup - expectations</span></span><br><span class="line">    warehouseMock.expects(once()).method(<span class="string">"hasInventory"</span>)</span><br><span class="line">      .with(eq(TALISKER),eq(<span class="number">50</span>))</span><br><span class="line">      .will(returnValue(<span class="keyword">true</span>));</span><br><span class="line">    warehouseMock.expects(once()).method(<span class="string">"remove"</span>)</span><br><span class="line">      .with(eq(TALISKER), eq(<span class="number">50</span>))</span><br><span class="line">      .after(<span class="string">"hasInventory"</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//exercise</span></span><br><span class="line">    order.fill((Warehouse) warehouseMock.proxy());</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//verify</span></span><br><span class="line">    warehouseMock.verify();</span><br><span class="line">    assertTrue(order.isFilled());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingDoesNotRemoveIfNotEnoughInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);    </span><br><span class="line">    Mock warehouse = mock(Warehouse<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">      </span><br><span class="line">    warehouse.expects(once()).method(<span class="string">"hasInventory"</span>)</span><br><span class="line">      .withAnyArguments()</span><br><span class="line">      .will(returnValue(<span class="keyword">false</span>));</span><br><span class="line"></span><br><span class="line">    order.fill((Warehouse) warehouse.proxy());</span><br><span class="line"></span><br><span class="line">    assertFalse(order.isFilled());</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先把注意力集中在<em>testFillingRemovesInventoryIfInStock</em>，因为在后面的测试中我将采用两个快捷方式。</p>
+<p>首先，启动(setup)阶段就有很大的不同。一开始，它分离成了两个部分：数据和预期。数据部分设置了在工作中我们感兴趣的对象，在这种场合，它类似于传统的启动。区别在于对象的创建。SUT仍然是相同的——Order。但是，<strong>协作者不再是一个Warehouse对象，替代的是一个mock的Warehouse——从技术上mock类的一个实例</strong>。</p>
+<p>第二部分是在mock对象上<strong>创建预期</strong>。预期指示了在SUT演练时，应该调用mock对象的哪个方法。</p>
+<p>一旦所有的预期都正确创建，我见演练SUT。演练完成后，我将开始验证，验证包含了两个方面。和之前一样，我对SUT进行断言。然后，我还得验证mock对象，检查它们是按照预期被调用的。</p>
+<p>这里关键的不同点在于我们如何验证Order在和warehouse交互时做了正确事情。使用状态验证(state verification)时，我们是通过断言warehouse的状态来实现这点。而mock对象使用<strong>行为验证(behavior verification)</strong>，作为替代，它检查的是Order是否在warehouse上做出了正确的调用。实现这种检查的方式是：在启动(setup)期间告知mock对象的预期，并在验证期间要求mock对象对其本身进行验证。只有Order在被检查时使用了断言，如果方法没有改变Order的状态，根本就不需要有断言。</p>
+<p>在第二个测试中，我做了两点不同的事情。首先，创建mock对象的方式不同，用的是MockObjectTestCase的mock方法而不是构造函数。这是JMock类库中的一个很方便的方法，这意味着在后面我不需要显式的调用验证，任何使用这个便利方法创建的mock对象会在测试的末尾自动进行验证。在第一个测试中我也可以这么处理，但是我想更明确的展示验证以说明测试是如何使用mock对象的。</p>
+<p>在第二个测试中的第二个不同点在于，我通过使用withAnyArgments释放了在预期上的约束。这么处理的理由是，第一个测试检查了被传递到warehouse的数字，所以在第二个测试中没必要重复这点。如果以后修改了Order的逻辑，那么第一个测试会失败，在迁移测试时只需很少付出。事实证明，我完全可以移除withAnyArgments，因为它是默认的。</p>
+<hr>
+<h2 id="使用EasyMock"><a href="#使用EasyMock" class="headerlink" title="使用EasyMock"></a>使用EasyMock</h2><p> 现在有大量的对象mock类库，我曾经遇到一个比较公平的是EasyMock，它有着java和.NET版。EasyMock也启用了行为验证，但它有着两个不同于JMock的并值得讨论的风格。下面是类似的测试：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OrderEasyTester</span> <span class="keyword">extends</span> <span class="title">TestCase</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> String TALISKER = <span class="string">"Talisker"</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">private</span> MockControl warehouseControl;</span><br><span class="line">  <span class="keyword">private</span> Warehouse warehouseMock;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setUp</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    warehouseControl = MockControl.createControl(Warehouse<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    warehouseMock = (Warehouse) warehouseControl.getMock();    </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingRemovesInventoryIfInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">//setup - data</span></span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">50</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//setup - expectations</span></span><br><span class="line">    warehouseMock.hasInventory(TALISKER, <span class="number">50</span>);</span><br><span class="line">    warehouseControl.setReturnValue(<span class="keyword">true</span>);</span><br><span class="line">    warehouseMock.remove(TALISKER, <span class="number">50</span>);</span><br><span class="line">    warehouseControl.replay();</span><br><span class="line"></span><br><span class="line">    <span class="comment">//exercise</span></span><br><span class="line">    order.fill(warehouseMock);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">//verify</span></span><br><span class="line">    warehouseControl.verify();</span><br><span class="line">    assertTrue(order.isFilled());</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testFillingDoesNotRemoveIfNotEnoughInStock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);    </span><br><span class="line"></span><br><span class="line">    warehouseMock.hasInventory(TALISKER, <span class="number">51</span>);</span><br><span class="line">    warehouseControl.setReturnValue(<span class="keyword">false</span>);</span><br><span class="line">    warehouseControl.replay();</span><br><span class="line"></span><br><span class="line">    order.fill((Warehouse) warehouseMock);</span><br><span class="line"></span><br><span class="line">    assertFalse(order.isFilled());</span><br><span class="line">    warehouseControl.verify();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>EasyMock使用了<strong>录制/回放(record/play)</strong>的方式设置预期。对于每个你希望mock的对象，你需要创建一个<strong>control</strong>，并mock对象。mock满足次要对象的接口，<strong>control</strong>给你提供了额外的功能。为了表明预期，你需要调用期望的mock对象的方法并传递相关参数。如果你需要返回一个值，接着调用<strong>control</strong>即可。一旦你完成了预期设置，就调用<strong>control</strong>的<em>replay()</em>方法——此刻次要对象结束录制并准备好响应主要对象。一旦完成，你可以调用<strong>control</strong>的verify()方法。(这里的主要对象即上文的SUT，而次要对象即协作者)</p>
+<p>虽然人们在第一眼见到录制/回放(record/play)时感到困扰，但他们很快就习惯了。它比JMock的约束有一项优势，那就是它真实的调用了mock对象的方法，而不是通过字符串来指定方法名。这意味着你可以使用IDE的代码完成功能，并且在重构方法名称时自动更新测试。而缺点是你见不能拥有宽松的约束。</p>
+<p>JMock的开发者正在开发一个新的版本，它使用一些其他的技术，将允许你调用实际的方法。</p>
+<hr>
+<h2 id="mock与stub的不同点"><a href="#mock与stub的不同点" class="headerlink" title="mock与stub的不同点"></a>mock与stub的不同点</h2><p>当它们首次引入的时候，很多人容易混淆mock和普通测试概念使用的stub。从那以后，人们似乎更好的理解了差异。但是，要完全理解mock的使用方式，理解mock和其他种类的测试替身(doubles，这个术语在后面会讲到)是很重要的。</p>
+<p>当你像这样做测试的时候，在某一时刻，你只能关注软件的一个元素——因此有了通用术语单元测试。问题在于产生一个工作单元，你通常需要其他单元——这就像需求某种我们之前的例子中的warehouse一样。</p>
+<p>在上已经展示过的例子中有两种风格的测试，第一种使用了一个真实的warehouse对象，第二种使用了一个mock warehouse，它当然不是一个真实的warehouse对象。在测试中，使用mock是不使用真实对象的一种方式，但是还存在着几种像这样的在测试中使用费真实对象的形式。</p>
+<p>用于讨论这些的词汇很快就凌乱了——各种单词都有：stub，mock，fake，dummy。对于本文，我将使用Gerard Meszaros的书中的词汇。这些词汇并不是每个人都使用，但我认为它们都是好的词汇，并且我的文章需要我挑选使用的词语。</p>
+<p>Meszaros使用了<strong>测试替身(Test Double)</strong>这个术语，用于描述那些在测试中替代真实对象的各类仿制对象。这个命名来自于电影中特技替身的概念(他的目的之一是避免使用那些已经被广泛使用的命名)。Meszaros然后又定义了四种类型的替身：</p>
+<ul>
+<li><strong>Dummy</strong>(傀儡) ，对象被传递，但实际上不会使用，通常仅用于填充参数列表</li>
+<li><strong>Fake</strong>(赝品)，对象已经有了实际的处理实现，但通常采取便利的方式，这使得他们对产品不适合(一个好的例子就是内存中数据库，如SQLite)</li>
+<li><strong>Stubs</strong>(stub)，在测试中针对调用提供录制的答案，通常不会响应测试中编程以外的任何东西。Stubs还录制了调用的信息，例如一个email入口stub，它能记住发送的信息，或者可能只记住了发送信息的数量</li>
+<li><strong>Mocks</strong>(mock)，它正是我们在这里所讨论的：对象预先编写好预期，然后形成一个它们期望接收到的规范调用。</li>
+</ul>
+<p>这些类型的替身，只有Mocks坚持了行为验证(beaviors verification)，其它替身平时能做的是使用状态验证(state verification)。和其它替身一样，在演练阶段，Mocks实际的执行行为，因为它要让SUT相信它正在与真实的协作者对话——但是在启动和验证阶段，Mocks是不同的。</p>
+<p>为了深入探索测试替身，我们需要扩展我们的例子。很多人只在真实对象处理起来比较棘手的时候才使用测试替身。一个更常见的用于测试替身的例子是：在我们填充订单失败的时候，发送一个email。问题是，在测试期间，我们不想要发送真实的eamil信息给客户。所以，作为替代，我们需要创建一个email系统的替身，能让我们控制和操作。</p>
+<p>这里我们可以开始看到mocks和stubs的不同点。如果我们正在对邮寄行为编写一个测试，我们可能会像这样编写一个简单的stubs：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MailService</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span> <span class="params">(Message msg)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MailServiceStub</span> <span class="keyword">implements</span> <span class="title">MailService</span> </span>&#123;</span><br><span class="line">  <span class="keyword">private</span> List&lt;Message&gt; messages = <span class="keyword">new</span> ArrayList&lt;Message&gt;();</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">send</span> <span class="params">(Message msg)</span> </span>&#123;</span><br><span class="line">    messages.add(msg);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">numberSent</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> messages.size();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;                                 </span><br><span class="line"></span><br><span class="line"><span class="comment">//然后，我们可以这样对这个stub进行状态验证：</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderStateTester</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrderSendsMailIfUnfilled</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);</span><br><span class="line">    MailServiceStub mailer = <span class="keyword">new</span> MailServiceStub();</span><br><span class="line">    order.setMailer(mailer);</span><br><span class="line">    order.fill(warehouse);</span><br><span class="line">    assertEquals(<span class="number">1</span>, mailer.numberSent());</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当然这只是一个简单的测试，仅测试是否发送了一条信息。我们没有测试它是否发送给了正确的人，或者内容是否正确，但它会说明这点。</p>
+<p>当使用mock对象进行相同的测试时，会有很大不同：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">OrderInteractionTester</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testOrderSendsMailIfUnfilled</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Order order = <span class="keyword">new</span> Order(TALISKER, <span class="number">51</span>);</span><br><span class="line">    Mock warehouse = mock(Warehouse<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    Mock mailer = mock(MailService<span class="class">.<span class="keyword">class</span>)</span>;</span><br><span class="line">    order.setMailer((MailService) mailer.proxy());</span><br><span class="line"></span><br><span class="line">    mailer.expects(once()).method(<span class="string">"send"</span>);</span><br><span class="line">    warehouse.expects(once()).method(<span class="string">"hasInventory"</span>)</span><br><span class="line">      .withAnyArguments()</span><br><span class="line">      .will(returnValue(<span class="keyword">false</span>));</span><br><span class="line"></span><br><span class="line">    order.fill((Warehouse) warehouse.proxy());</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>在上面的两个例子中，我是用了测试替身来替代真实的email服务。而不同点在于stubs使用了状态验证，而mocks是通了行为验证。</p>
+<p>为了在stub上使用状态验证，我需要在stubs上产生额外的方法来帮助测试。作为结果，stubs实现了MailService，但添加了额外的方法(numberSent)。</p>
+<p><strong>mocks对象总是使用行为验证，而stubs可以使用两种方式。</strong> Meszaros指出stubs可以作为测试间谍(Test Spy)以使用行为验证。不同点在于替身究竟是如何运行和验证的，我将把这点留给你自行探索。</p>
+<hr>
+<h2 id="Classical和Mockist测试"><a href="#Classical和Mockist测试" class="headerlink" title="Classical和Mockist测试"></a>Classical和Mockist测试</h2><p>现在我处于第二个一分为二的分界点：classical和mockist TDD。这里最大的问题是什么时候使用Mock(或其它替身)。</p>
+<p><strong>Classical TDD的风格是尽可能的使用真实对象，只在使用真实对象比较棘手的时候使用替身</strong>。因此，classical TDD从业者将使用一个真实的warehouse和一个email服务替身。替身的种类则是无关紧要的。</p>
+<p><strong>Mockist TDD从业者则总是使用任意对象的mock来处理感兴趣的行为。</strong>在这个例子中，warehouse和email服务都是mock的。</p>
+<p>尽管各种mock框架都是用Mockist测试的思想设计的，但很多Classical TDD从业者发现它们对于创建替身还是很有用的。</p>
+<p>Mockist风格的一个重要分支是<strong><a href="http://dannorth.net/introducing-bdd/" target="_blank" rel="noopener">行为驱动开发(Behavior Driven Development，BDD)</a></strong>。BDD最开始是由我的同事Dan North开发的，用意是作为一项技术，通过关注TDD作为一项设计技术是如何运转，以更好的帮助人们学习TDD。这导致了将测试重命名为行为，以更好的探索TDD在哪些地方有助于探索对象需要做什么。BDD采用了Mockist的方式，但它扩展了这一点，包括它的命名方式，和它将分析整合到它的技术范围内的愿望。我将不会对此进行深入，因为BDD与这篇文章的唯一的关联是，BDD是TDD的一个异变，它倾向于采用Mockist测试。</p>
+<hr>
+<h2 id="在区别中选择"><a href="#在区别中选择" class="headerlink" title="在区别中选择"></a>在区别中选择</h2><p>在这篇文章中，我已经阐释了一对差异：状态/行为验证和classical/mockist TDD。当在它们之间进行选择的时候，支撑它们的论据是什么？我将以状态对阵行为的选择作为开始。</p>
+<p>首先需要考虑的事情是背景(上下文)。我们是否考虑过一个更简单的写作，诸如order和warehouse，或一个更棘手的，例如order和email服务？</p>
+<p>如果协作很容易，那么选择就很简单。如果我是一个classical TDD从业者，我不会选择mock，stub，或任意类型的替身。我将使用一个真实对象和状态验证；如果我是一个mockist TDD从业者，我将使用mock和行为验证。这没有什么好说的。</p>
+<p>如果协作很困难，如果我是mockist TDD从业者，没什么好说的，直接使用mock和行为验证。如果我是一个classical TDD从业者，那么我确实需要做出选择，但是使用哪种都不是什么大问题。通常他们会针对案例作出决定，对于每种情形使用最简单的方式。</p>
+<p><strong>到现在为止，我们看到选择状态验证或行为验证几乎不是什么大的决定。真正的问题在于classical TDD和Mockist TDD。</strong> 因为事实证明，状态验证和行为验证的特征将影响着讨论，而这里正是我集中关注的地方。</p>
+<p>但在此之前，让我现提出一个边缘案例。有时候你遇到的东西真的很难使用状态验证，尽管它们不是很难协作。这种情形的一个好例子是缓存。缓存的关键是你不能从它的状态来告知缓存被击中或错过——在这个例子中，尽管你是一个忠实的classical TDD从业者，但行为验证才是聪明的选择。我确信在两个方向都有例外的情形。</p>
+<p>因为我们探究了classical/mockist的选择，有很多因素需要考虑，所以我将它们打破并分组。</p>
+<hr>
+<h2 id="驱动TDD"><a href="#驱动TDD" class="headerlink" title="驱动TDD"></a>驱动TDD</h2><p> mock对象来源于极限编程社区，而极限编程最重要的功能之一就是着重于测试驱动开发——即系统设计的演变是通过迭代驱动编写测试进行的(即重复驱动编写测试)。</p>
+<p>因此，mockist特别讨论下mockist测试在设计上的影响是一点也不奇怪的。尤其是他们提倡的一种方式——<strong>责任驱动开发(need-driven development)</strong>。使用这种方式，你是通过为你的系统外围编写你的第一个测试来作为开发<strong><a href="http://martinfowler.com/bliki/UserStory.html" target="_blank" rel="noopener">userstory</a></strong>的开始，制造一些接口来拒绝你的SUT。通过思考协作者的预期，你研究了SUT和协作者的交互——有效的设计出SUT与外部通讯的接口。<a href="http://martinfowler.com/bliki/UserStory.html" target="_blank" rel="noopener">
+</a></p>
+<p>一旦你运行了你的第一个测试，mock的预期就为下一步提供了一个规范，并为测试提供了一个起点。 你将每个预期转换为对协作者的一个测试，并且按你的方式重复每次进入到系统SUT的过程。这种方式也被称为<strong>outside-in</strong>，这是对它的一个非常具有说明性的命名。对于分层系统而言效果很好。<strong>首先，使用mock层底层来编程UI。然后，为更低层编写测试，逐次通过系统的一层。</strong>这是一个非常有条理的和可控的方式，也是很多人认为有益于OO或TDD新手的一种方式。</p>
+<p>传统TDD没有提供与此相当的指导。你可以采取一个类似的渐进方式，使用stubed方法代替mocks。不管你何时需要协作者的某些东西，你只需要严格按测试请求来硬编码响应，以让SUT运转。然后，一旦你的测试通过了，你就可以使用更合适的代码来替换硬编码的代码了。</p>
+<p>但是传统TDD也能做其他的事情。一个常见的方式是<strong>middle-out</strong>。在这种方式，你先选择某一个点，并决定在领域层中你还需要些什么才能让这点运转。你让领域对象处理你需要的，一旦它们运行了，就把UI置于顶层。像这样处理，你永远都不需要伪造任何东西。很多人喜欢这种方式，因为它优先将注意力集中在领域模型上，有助于防止领域逻辑被泄露到UI。</p>
+<p>我必须强调的是，不管是mockist，还是classicist，一次只能处理一个story。thought有一所学校，想按分层创建应用程序，他们不是在一层完成后再开始另外一个。mockist和classicist都倾向于敏捷的背景并且偏好细粒度的迭代。结果，他们弄成了按功能开发，而不是分层。</p>
+<hr>
+<h2 id="组织设施"><a href="#组织设施" class="headerlink" title="组织设施"></a>组织设施</h2><p> 使用传统的TDD，你不但需要为测试创建SUT，还需要创建在响应中SUT需要的所有的协作者。虽然在前面的示例中只有一组对象，但在实际的测试中经常会涉及到大量的次要对象。通常，这些对象是在每次运行测试的时候没创建被创建和拆除。</p>
+<p>然而，mockist测试只需要创建SUT并mock它的近邻。这可以避免卷入到创建复杂的设施(至少理论上是这样。我曾经遇到过一个相当复杂的mock局面，但这可能归结于我没有很好的使用工具)。</p>
+<p> 在实践中，传统测试人员倾向于尽可能的重用复杂的设施。实现这点的最简单的方式是将设施启动代码放入到xUnit的启动方法中(这里的设施指的是mock设施，前文介绍过四个阶段：启动、预期、演练、验证，这里指把启动阶段放到测试设施的启动方法，如Nunit的setup方法)。如果一个复杂的设施需要被几个测试类使用，在这种情况下，你可以创建特殊设施泛型类。我通常将这些类称为<strong><a href="http://martinfowler.com/bliki/ObjectMother.html" target="_blank" rel="noopener">Object Mothers</a></strong>，这是基于Thought works的早期的一个极限编程的命名惯例。在大型的传统测试中，使用mothers是很有必要的，但是mothers是额外的代码，因此它需要维护，并且对mothers的任何修改都会显著的波及到这些测试。而且，在设置设施的时候还可能会产生性能成本——虽然在处理得当的时候我还没听说过这会是一个严重的问题。大部分的设施对象创建的代价很小，通常不会翻倍。</p>
+<p>结果，我听说两者方式都指责对方要做的工作太多，mockist说创建设施需要很多的努力，而classicist则说这是重用，而你则需要在每个测试中创建mock。</p>
+<hr>
+<h2 id="测试隔离"><a href="#测试隔离" class="headerlink" title="测试隔离"></a>测试隔离</h2><p>如果你在使用mockist测试时对系统引入了一个bug，它通常会导致仅在测试包含bug的SUT时失败。使用classic方式时，任何客户端对象的测试都可能会失败，而且还将导致其他测试项目中将此bug对象作为协作者的测试的失败。因此，一个广泛使用的对象的失败，将导致失败波及到整个系统的测试。</p>
+<p>mockist测试人员认为这是一个很大的问题。为了找到错误源并修复，将导致大量的调试。但是classicist不认为这是问题的来源。通常，通过查看失败的测试和开发人员可以告知的故障源，罪魁祸首是比较容易被发现的。将来，如果你尽可能的定期测试，如果你知道了是在最后一次编辑后产生了故障，那么找到失败点并不困难。</p>
+<p>一个比较显著的因素是测试粒度。因为传统测试演练多个真实对象，你常会发现一个测试是作为一个对象群的基本测试，而不是仅一个对象的测试。如果对象群跨越了很多个对象，那么想找到一个bug的真实源头将是比较苦难的。发生这种状况的原因是粗粒度的测试。</p>
+<p>可以确定的是，mockist是不太可能遇到这种问题的，因为根据惯例，mock出的所有对象都属于主要对象，这清楚的表明，协作者需要细粒度的测试。这就是说，传统测试选择用过于粗粒度的测试作为测试技术是一个不必要的失败，还不如完全不做测试。一个很好的法则是：<strong>确保对于每个类进行独立的细粒度测试</strong>。虽然集群有时是合理的，但是它们应该被限制为仅很少的几个对象——不超过6个。此外，如果因为过于粗粒度的测试带来了调试问题，你应该按测试驱动的方式进行调试，并创建细粒度的测试。</p>
+<p>从本质上讲，传统的xUnit测试不仅仅是单元测试，还是微型集成测试。因此，人们可能喜欢这个事实：客户端测试可能会捕获那些被对象的主要测试错过的错误，尤其是探测那些类交互的区域。而mockist测试不具备这项能力。此外，你还面临着mockist测试预期设置不正确的风险，这将导致测试通过而掩盖了内在的错误。</p>
+<p>我需要强调的是：不论你选用哪种测试方式，你必须将它与组粒度验收测试组合，这样作为一个整体运行跨越了整个系统。我经常遇到一些项目没有组粒度验收测试，然后他们感到后悔了。</p>
+<hr>
+<h2 id="对实现的耦合测试"><a href="#对实现的耦合测试" class="headerlink" title="对实现的耦合测试"></a>对实现的耦合测试</h2><p>当你在编一个mockist测试时，你在测试SUT的对外调用，以确保它与正确的提供者对话。一个传统测试只关注最终的状态——而不是状态如何得到的。因此，mockist测试与方法的实现更加耦合。更改协作者调用的类型，将导致mockist测试失败。</p>
+<p>这种耦合将导致两个关注点。最重要的一个是对测试驱动开发(TDD)的影响。使用mockist测试，编写测试将使得你思考行为的实现——mockist开发人员确实看到了这项优势。而classicist认为重点在于只需要外部的接口发生了什么，并且不需要考虑任何实现，直到你完成了测试的编写。</p>
+<p>耦合到实现还干预到重构，因为实现的更改比传统测试更有可能破坏测试。</p>
+<p>根据mock工具的类型，这种情况还可能会恶化。通常，mock工具指定了非常具体的方法调用和匹配参数，即使它们与这个测试是不相关的。</p>
+<hr>
+<h2 id="设计方式"><a href="#设计方式" class="headerlink" title="设计方式"></a>设计方式</h2><p>这些测试风格最让我着迷的方面之一就是它们是如何影响测试决策的。由于我已经与两类型的测试人员讨论过，我已经意识到两种风格所鼓励的设计的区别，但我确信我仅仅只是刚入门。</p>
+<p>我已经提到了在交互层的一个差异。mockist测试支持outside-in方式，而选择领域模型的风格的开发者选择传统测试。</p>
+<p>在较低的级别，我注意到mockist测试人员倾向于摆脱无返回值的方法，更喜欢那些操作基于收集对象的方法。以从一组对象收集信息来创建一个报告字符串的行为为例。一个常见的处理方式是有一个报告方法调用各种对象的字符串返回方法，并在一个临时变量中装配结果字符串。一个mockist测试人员更有可能传递一个字符串缓冲区给各种对象，让它们把各种字符串添加到缓冲区——将字符串缓冲区作为一个收集参数处理。</p>
+<p>mockist测试人员做了很多讨论以避免“火车残骸”(train wrecks)——像这样的方法链风格“getThis().getThat().getTheOther()”。避免方法链也被称为遵循<strong><a href="http://baike.baidu.com/link?url=Yk6AEwzYk_S1d7WgZBu4O9eHZCKnLAhIwyv94TTjtQjcftwlgDNAu0q6l9_Vi7OBhsrHZePV3xlgekdCSMtMB-Cz9arwpHT7Ht1H4QcXC38ZznvKj2OB3NLsnxaT2fXE" target="_blank" rel="noopener">迪米特法则</a></strong>(Law of Demeter)。</p>
+<p>人们理解面向对象设计的最困难的事情之一就是<strong><a href="http://martinfowler.com/bliki/TellDontAsk.html" target="_blank" rel="noopener">“Tell Don’t Ask”</a></strong>原则，即告知对象应该做什么，而不是向对象请求数据，然后在客户端代码对数据进行处理。mockist从业者说mockist测试有助于促进这点并避免getter遍及太多的代码。而classicist从业者则争论说有着大量的其他方式来做到这点。</p>
+<p> 使用基于状态验证有一个众所周知的问题，那就是它将导致创建的查询方法仅用于支持验证。向对象的API添加一个方法纯粹用于测试是不会让人舒服的，而使用行为验证可避免这个问题。与此相反的观点是，这种限制只存在于少数的实践中。</p>
+<p>Mockist有利于<strong><a href="http://martinfowler.com/bliki/RoleInterface.html" target="_blank" rel="noopener">角色接口(Role interface)</a></strong>和断言，使用这种风格的测试促进更多的角色接口，因为每个协作者被独立mock，从而更有可能转换为一个角色接口。所以在我上面使用一个字符串缓冲区来生成报告的例子中，一个mockist更有可能创建一个特别的在该领域内说得通的角色，它可能由字符串缓冲区来实现的。</p>
+<p>重要的是记住设计风格的这种差异是大部分mockist的一个关键促进因素。TDD起源于希望得到一个支持设计进化的自动化回归测试。随着时间的推移，从业者发现先写测试显著的改善了设计过程。对于什么样的设计才是一个好的设计，mockist有强烈的概念，并且他们开发了mock类库，从根本上帮助人们开发这种设计风格。</p>
+<hr>
+<h2 id="选择称为classicist还是mockist呢？"><a href="#选择称为classicist还是mockist呢？" class="headerlink" title="选择称为classicist还是mockist呢？"></a>选择称为classicist还是mockist呢？</h2><p>我觉得这是一个很难带着信心回答的问题。我个人一直都是老式的传统测试驱动开发人员，而且到目前为止，没有什么理由去改变。对于mockist测试驱动开发，我们没看到有什么特别强烈的好处，而且我对耦合测试实施的后果感到担心。</p>
+<p>当我在观察一些mockist程序员时，这些特别的敲打了我。我真的很喜欢这样事实，虽然编写测试你关注的是行为的结果，而不是行为是如何处理的。为了编写预期，mockist经常需要考虑如何实现SUT。我感觉这点更加不自然。</p>
+<p>我也忍受着来源于没有尝试mockist TDD所带的任何缺点。正如我已经学习过的TDD本身，如果没有认真的尝试，真的很难判断一项技术。但我确认很多的开发者都非常高兴并且很相信mockist。虽然我仍然坚持classist，但我现在宁愿公平辩论这两种方式，以使你自己做出决定。</p>
+<p> 所以，如果mockist测试听起来更吸引你，我建议它进行尝试。如果你在提高mockist TDD的某些方面遇到了问题，更是值得尝试。在这里我看到了两个方面。其一是在测试失败时，由于测试不是被有规则的打破和没有告知你问题在哪里，你将花费大量的时间去调试(你也可以在传统TDD上使用细粒度集群来提高这点)。其二是如果你的对象没有包含足够的行为，mockist测试可能会促进开发图案创建更多行为的富对象。</p>
+<hr>
+<h2 id="最后的思索"><a href="#最后的思索" class="headerlink" title="最后的思索"></a>最后的思索</h2><p> 由于对单元测试感兴趣，xUnit框架和TDD已经成长了，越来越多的人遇到mock对象。很多时候，人们对于mock对象框架的了解很少，没有完全理解支撑mockist/classical的分界线。不管你依赖哪种分法，我认为这有助于更好的理解这种意见分歧。虽然你没必要像一个mockist那样去找到一个方便的mock框架，但你应该理解这种思想，因为它指导了软件的很多设计决策。</p>
+<p>本文的目的是指出这些不同点并展示它们之间的平衡。还有更多的mockist思想需要我花时间去深入，尤其是它在设计风格上的影响后果。我希望在未来几年里能看到更多关于这点的文章，这将加深我们理解在编码之前编写测试所带来的令人着迷的结果。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://yoursite.com/2018/07/12/docs/%E6%B5%8B%E8%AF%95/Mocks_Aren't_Stubs/" title="Mocks Aren&#39;t Stubs" target="_blank" rel="external">http://yoursite.com/2018/07/12/docs/%E6%B5%8B%E8%AF%95/Mocks_Aren't_Stubs/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/07/13/docs/%E6%B5%8B%E8%AF%95/mockito/" title="mockito"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2016/07/13/docs/%E5%B7%A5%E5%85%B7/%E5%B8%B8%E7%94%A8%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" title="常用软件列表"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

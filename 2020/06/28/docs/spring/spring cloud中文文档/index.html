@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>docs/spring/spring cloud中文文档 | Hexo</title>
+  <meta name="description" content="特性  云原生应用程序  Spring Cloud上下文：应用程序上下文服务 引导应用程序上下文 应用程序上下文层次结构 改变引导位置Properties 覆盖远程Properties的值 自定义引导配置 自定义引导属性源 环境变化 刷新范围 加密和解密 端点   Spring Cloud Commons：普通抽象 @EnableDiscoveryClient ServiceRegistry S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docs&#x2F;spring&#x2F;spring cloud中文文档">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/docs/spring/spring%20cloud%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="特性  云原生应用程序  Spring Cloud上下文：应用程序上下文服务 引导应用程序上下文 应用程序上下文层次结构 改变引导位置Properties 覆盖远程Properties的值 自定义引导配置 自定义引导属性源 环境变化 刷新范围 加密和解密 端点   Spring Cloud Commons：普通抽象 @EnableDiscoveryClient ServiceRegistry S">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-28T08:46:29.476Z">
+<meta property="article:modified_time" content="2020-06-28T08:46:29.476Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/2020/06/28/docs/spring/spring%20cloud%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/d/">d</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%9D%82%E7%83%A9/">大杂烩</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/" rel="tag">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/document/" rel="tag">document</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hex/" rel="tag">hex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mock/" rel="tag">mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag">插件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag">软件</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/daily/" style="font-size: 14px;">daily</a> <a href="/tags/document/" style="font-size: 13px;">document</a> <a href="/tags/hex/" style="font-size: 13px;">hex</a> <a href="/tags/mock/" style="font-size: 13px;">mock</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 13px;">插件</a> <a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">测试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 13px;">软件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">75</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README.en/" class="title">docs/README.en</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README/" class="title">docs/README</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/d/">d</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E5%B7%A5%E5%85%B7/%E6%96%87%E6%A1%A3/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E5%92%8C%E6%96%87%E6%A1%A3/" class="title">hexo搭建博客和文档</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T15:01:41.000Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98/%E8%B0%83%E4%BC%98/" class="title">docs/系统调优/调优</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E8%BF%90%E7%BB%B4/mac/Mac%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" class="title">docs/运维/mac/Mac软件列表</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-docs/spring/spring cloud中文文档" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      docs/spring/spring cloud中文文档
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/06/28/docs/spring/spring%20cloud%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/" class="article-date">
+	  <time datetime="2020-06-28T08:46:29.476Z" itemprop="datePublished">2020-06-28</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/06/28/docs/spring/spring%20cloud%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <ul>
+<li><p><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_features" target="_blank" rel="noopener">特性</a></p>
+</li>
+<li><p>云原生应用程序</p>
+<ul>
+<li>Spring Cloud上下文：应用程序上下文服务<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_the_bootstrap_application_context" target="_blank" rel="noopener">引导应用程序上下文</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_application_context_hierarchies" target="_blank" rel="noopener">应用程序上下文层次结构</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#customizing-bootstrap-properties" target="_blank" rel="noopener">改变引导位置Properties</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#overriding-bootstrap-properties" target="_blank" rel="noopener">覆盖远程Properties的值</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customizing_the_bootstrap_configuration" target="_blank" rel="noopener">自定义引导配置</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#customizing-bootstrap-property-sources" target="_blank" rel="noopener">自定义引导属性源</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_environment_changes" target="_blank" rel="noopener">环境变化</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_refresh_scope" target="_blank" rel="noopener">刷新范围</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_encryption_and_decryption" target="_blank" rel="noopener">加密和解密</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_endpoints" target="_blank" rel="noopener">端点</a></li>
+</ul>
+</li>
+<li>Spring Cloud Commons：普通抽象<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#__enablediscoveryclient" target="_blank" rel="noopener">@EnableDiscoveryClient</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_serviceregistry" target="_blank" rel="noopener">ServiceRegistry</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_spring_resttemplate_as_a_load_balancer_client" target="_blank" rel="noopener">Spring RestTemplate作为负载平衡器客户端</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_multiple_resttemplate_objects" target="_blank" rel="noopener">多个RestTemplate对象</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#ignore-network-interfaces" target="_blank" rel="noopener">忽略网络接口</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Spring Cloud Config</p>
+<ul>
+<li>快速开始<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_client_side_usage" target="_blank" rel="noopener">客户端使用</a></li>
+</ul>
+</li>
+<li>Spring Cloud Config服务器<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_environment_repository" target="_blank" rel="noopener">环境库</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_health_indicator" target="_blank" rel="noopener">健康指标</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_security" target="_blank" rel="noopener">安全</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_encryption_and_decryption_2" target="_blank" rel="noopener">加密和解密</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_key_management" target="_blank" rel="noopener">密钥管理</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_creating_a_key_store_for_testing" target="_blank" rel="noopener">创建用于测试的密钥库</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_multiple_keys_and_key_rotation" target="_blank" rel="noopener">使用多个键和键旋转</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_serving_encrypted_properties" target="_blank" rel="noopener">服务加密Properties</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_serving_alternative_formats" target="_blank" rel="noopener">服务替代格式</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_serving_plain_text" target="_blank" rel="noopener">服务纯文本</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_embedding_the_config_server" target="_blank" rel="noopener">嵌入配置服务器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_push_notifications_and_spring_cloud_bus" target="_blank" rel="noopener">推送通知和Spring Cloud Bus</a></li>
+<li>Spring Cloud Config客户端<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#config-first-bootstrap" target="_blank" rel="noopener">配置第一引导</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#discovery-first-bootstrap" target="_blank" rel="noopener">发现第一个引导</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#config-client-fail-fast" target="_blank" rel="noopener">配置客户端快速失败</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#config-client-retry" target="_blank" rel="noopener">配置客户端重试</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_locating_remote_configuration_resources" target="_blank" rel="noopener">查找远程配置资源</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_security_2" target="_blank" rel="noopener">安全</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_vault_2" target="_blank" rel="noopener">Vault</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Spring Cloud Netflix</p>
+<ul>
+<li>服务发现：Eureka客户端<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-eureka-client-starter" target="_blank" rel="noopener">如何包含Eureka客户端</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_registering_with_eureka" target="_blank" rel="noopener">注册Eureka</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_authenticating_with_the_eureka_server" target="_blank" rel="noopener">使用Eureka服务器进行身份验证</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_status_page_and_health_indicator" target="_blank" rel="noopener">状态页和健康指标</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_registering_a_secure_application" target="_blank" rel="noopener">注册安全应用程序</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_eureka_s_health_checks" target="_blank" rel="noopener">Eureka的健康检查</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_eureka_metadata_for_instances_and_clients" target="_blank" rel="noopener">Eureka实例和客户端的元数据</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_the_eurekaclient" target="_blank" rel="noopener">使用EurekaClient</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_alternatives_to_the_native_netflix_eurekaclient" target="_blank" rel="noopener">本机Netflix EurekaClient的替代方案</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_why_is_it_so_slow_to_register_a_service" target="_blank" rel="noopener">为什么注册服务这么慢？</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_zones" target="_blank" rel="noopener">区</a></li>
+</ul>
+</li>
+<li>服务发现：Eureka服务器<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-eureka-server-starter" target="_blank" rel="noopener">如何包含Eureka服务器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-running-eureka-server" target="_blank" rel="noopener">如何运行Eureka服务器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-eureka-server-zones-and-regions" target="_blank" rel="noopener">高可用性，区域和地区</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_standalone_mode" target="_blank" rel="noopener">独立模式</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_peer_awareness" target="_blank" rel="noopener">同行意识</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_prefer_ip_address" target="_blank" rel="noopener">IP地址偏好</a></li>
+</ul>
+</li>
+<li>断路器：Hystrix客户端<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-hystrix-starter" target="_blank" rel="noopener">如何加入Hystrix</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_propagating_the_security_context_or_using_spring_scopes" target="_blank" rel="noopener">传播安全上下文或使用Spring范围</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_health_indicator_3" target="_blank" rel="noopener">健康指标</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_hystrix_metrics_stream" target="_blank" rel="noopener">Hystrix指标流</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_circuit_breaker_hystrix_dashboard" target="_blank" rel="noopener">断路器：Hystrix仪表板</a></li>
+<li>Hystrix超时和Ribbon客户<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-hystrix-dashboard-starter" target="_blank" rel="noopener">如何包含Hystrix仪表板</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_turbine" target="_blank" rel="noopener">Turbine</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_turbine_stream" target="_blank" rel="noopener">Turbine Stream</a></li>
+</ul>
+</li>
+<li>客户端负载平衡器：Ribbon<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-ribbon-starter" target="_blank" rel="noopener">如何加入Ribbon</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customizing_the_ribbon_client" target="_blank" rel="noopener">自定义Ribbon客户端</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customizing_the_ribbon_client_using_properties" target="_blank" rel="noopener">使用属性自定义Ribbon客户端</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_ribbon_with_eureka" target="_blank" rel="noopener">在Eureka中使用Ribbon</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-ribbon-without-eureka" target="_blank" rel="noopener">示例：如何使用Ribbon不使用Eureka</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_example_disable_eureka_use_in_ribbon" target="_blank" rel="noopener">示例：在Ribbon中禁用Eureka使用</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_the_ribbon_api_directly" target="_blank" rel="noopener">直接使用Ribbon API</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#ribbon-child-context-eager-load" target="_blank" rel="noopener">缓存Ribbon配置</a></li>
+</ul>
+</li>
+<li>声明性REST客户端：Feign<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-feign-starter" target="_blank" rel="noopener">如何加入Feign</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-feign-overriding-defaults" target="_blank" rel="noopener">覆盖Feign默认值</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_creating_feign_clients_manually" target="_blank" rel="noopener">手动创建Feign客户端</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-feign-hystrix" target="_blank" rel="noopener">Feign Hystrix支持</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-feign-hystrix-fallback" target="_blank" rel="noopener">Feign Hystrix回退</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_feign_and_code_primary_code" target="_blank" rel="noopener">Feign和<code>@Primary</code></a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-feign-inheritance" target="_blank" rel="noopener">Feign继承支持</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_feign_request_response_compression" target="_blank" rel="noopener">Feign请求/响应压缩</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_feign_logging" target="_blank" rel="noopener">Feign日志记录</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_external_configuration_archaius" target="_blank" rel="noopener">外部配置：Archaius</a></li>
+<li>路由器和过滤器：Zuul<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-zuul-starter" target="_blank" rel="noopener">如何加入Zuul</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-zuul-reverse-proxy" target="_blank" rel="noopener">嵌入式Zuul反向代理</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_zuul_http_client" target="_blank" rel="noopener">Zuul Http客户端</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_cookies_and_sensitive_headers" target="_blank" rel="noopener">Cookie和敏感Header</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_ignored_headers" target="_blank" rel="noopener">忽略的Header</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_the_routes_endpoint" target="_blank" rel="noopener">路线端点</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_strangulation_patterns_and_local_forwards" target="_blank" rel="noopener">扼杀模式和本地前进</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_uploading_files_through_zuul" target="_blank" rel="noopener">通过Zuul上传文件</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_query_string_encoding" target="_blank" rel="noopener">查询字符串编码</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_plain_embedded_zuul" target="_blank" rel="noopener">普通嵌入Zuul</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_disable_zuul_filters" target="_blank" rel="noopener">禁用Zuul过滤器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#hystrix-fallbacks-for-routes" target="_blank" rel="noopener">为路线提供Hystrix回退</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#zuul-developer-guide" target="_blank" rel="noopener">Zuul开发人员指南</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_polyglot_support_with_sidecar" target="_blank" rel="noopener">Polyglot支持Sidecar</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-rxjava-springmvc" target="_blank" rel="noopener">RxJava与Spring MVC</a></li>
+<li>指标：Spectator，Servo和Atlas<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_dimensional_vs_hierarchical_metrics" target="_blank" rel="noopener">维度与层次度量</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_default_metrics_collection" target="_blank" rel="noopener">默认度量集合</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-metrics-spectator" target="_blank" rel="noopener">指标集：Spectator</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-metrics-servo" target="_blank" rel="noopener">指标集：Servo</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#netflix-metrics-atlas" target="_blank" rel="noopener">指标后端：Atlas</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#retrying-failed-requests" target="_blank" rel="noopener">重试失败的请求</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Spring Cloud Stream</p>
+<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_introducing_spring_cloud_stream" target="_blank" rel="noopener">介绍Spring Cloud Stream</a></li>
+<li>主要概念<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_application_model" target="_blank" rel="noopener">应用模型</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_the_binder_abstraction" target="_blank" rel="noopener">Binder抽象</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_persistent_publish_subscribe_support" target="_blank" rel="noopener">持续发布 - 订阅支持</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#consumer-groups" target="_blank" rel="noopener">消费群体</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#partitioning" target="_blank" rel="noopener">分区支持</a></li>
+</ul>
+</li>
+<li>编程模型<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_declaring_and_binding_channels" target="_blank" rel="noopener">声明和绑定频道</a></li>
+</ul>
+</li>
+<li>Binders<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_producers_and_consumers" target="_blank" rel="noopener">生产者和消费者</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_binder_spi" target="_blank" rel="noopener">Binder SPI</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_binder_detection" target="_blank" rel="noopener">Binder检测</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#multiple-binders" target="_blank" rel="noopener">Classpath上有多个Binders</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#multiple-systems" target="_blank" rel="noopener">连接到多个系统</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_binder_configuration_properties" target="_blank" rel="noopener">Binder配置属性</a></li>
+</ul>
+</li>
+<li>配置选项<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_spring_cloud_stream_properties" target="_blank" rel="noopener">Spring Cloud Stream Properties</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#binding-properties" target="_blank" rel="noopener">绑定Properties</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#dynamicdestination" target="_blank" rel="noopener">使用动态绑定目的地</a></li>
+</ul>
+</li>
+<li>内容类型和转换<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#mime-types" target="_blank" rel="noopener">MIME类型</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#mime-types-and-java-types" target="_blank" rel="noopener">MIME类型和Java类型</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customizing_message_conversion" target="_blank" rel="noopener">自定义邮件转换</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#__code_streamlistener_code_and_message_conversion" target="_blank" rel="noopener"><code>@StreamListener</code>和邮件转换</a></li>
+</ul>
+</li>
+<li>Schema进化支持<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_apache_avro_message_converters" target="_blank" rel="noopener">Apache Avro讯息转换器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_converters_with_schema_support" target="_blank" rel="noopener">具有模式支持的转换器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_schema_registry_support" target="_blank" rel="noopener">Schema注册表支持</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_schema_registry_server" target="_blank" rel="noopener">Schema注册服务器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_schema_registry_client" target="_blank" rel="noopener">Schema注册表客户端</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_avro_schema_registry_client_message_converters" target="_blank" rel="noopener">Avro Schema注册表客户端消息转换器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_schema_registration_and_resolution" target="_blank" rel="noopener">Schema注册和解决</a></li>
+</ul>
+</li>
+<li>应用间通信<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_connecting_multiple_application_instances" target="_blank" rel="noopener">连接多个应用程序实例</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_instance_index_and_instance_count" target="_blank" rel="noopener">实例索引和实例计数</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_partitioning" target="_blank" rel="noopener">分区</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_testing" target="_blank" rel="noopener">测试</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_health_indicator_4" target="_blank" rel="noopener">健康指标</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_metrics_emitter" target="_blank" rel="noopener">指标发射器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_samples" target="_blank" rel="noopener">样品</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_getting_started" target="_blank" rel="noopener">入门</a></li>
+</ul>
+</li>
+<li><p>Binder实现</p>
+<ul>
+<li>Apache Kafka Binder<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_usage" target="_blank" rel="noopener">用法</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_apache_kafka_binder_overview" target="_blank" rel="noopener">Apache Kafka Binder概述</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_configuration_options_2" target="_blank" rel="noopener">配置选项</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#kafka-dlq-processing" target="_blank" rel="noopener">Dead-Letter主题处理</a></li>
+</ul>
+</li>
+<li>RabbitMQ Binder<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_usage_2" target="_blank" rel="noopener">用法</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_rabbitmq_binder_overview" target="_blank" rel="noopener">RabbitMQ Binder概述</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_configuration_options_3" target="_blank" rel="noopener">配置选项</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_retry_with_the_rabbitmq_binder" target="_blank" rel="noopener">重试RabbitMQ Binder</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#rabbit-dlq-processing" target="_blank" rel="noopener">Dead-Letter队列处理</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Spring Cloud Bus</p>
+<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_quick_start_2" target="_blank" rel="noopener">快速开始</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_addressing_an_instance" target="_blank" rel="noopener">处理实例</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_addressing_all_instances_of_a_service" target="_blank" rel="noopener">寻址服务的所有实例</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_application_context_id_must_be_unique" target="_blank" rel="noopener">应用程序上下文ID必须是唯一的</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customizing_the_message_broker" target="_blank" rel="noopener">自定义Message Broker</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_tracing_bus_events" target="_blank" rel="noopener">跟踪Bus Events</a></li>
+<li>广播自己的Events<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_registering_events_in_custom_packages" target="_blank" rel="noopener">在自定义包中注册事件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Spring Cloud Sleuth</p>
+<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_terminology" target="_blank" rel="noopener">术语</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_purpose" target="_blank" rel="noopener">目的</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_adding_to_the_project" target="_blank" rel="noopener">添加到项目中</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_additional_resources" target="_blank" rel="noopener">额外的资源</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_features_2" target="_blank" rel="noopener">特性</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_sampling" target="_blank" rel="noopener">采样</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_instrumentation" target="_blank" rel="noopener">仪表</a></li>
+<li>Span生命周期<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#creating-and-closing-spans" target="_blank" rel="noopener">创建和关闭spans</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#continuing-spans" target="_blank" rel="noopener">继续spans</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#creating-spans-with-explicit-parent" target="_blank" rel="noopener">用明确的父代创建spans</a></li>
+</ul>
+</li>
+<li>命名spans<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#__spanname_annotation" target="_blank" rel="noopener">@SpanName注释</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_tostring_method" target="_blank" rel="noopener">toString（）方法</a></li>
+</ul>
+</li>
+<li>管理spans注释<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_rationale" target="_blank" rel="noopener">合理</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_creating_new_spans" target="_blank" rel="noopener">创建新的spans</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_continuing_spans" target="_blank" rel="noopener">继续spans</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_more_advanced_tag_setting" target="_blank" rel="noopener">更高级的标签设置</a></li>
+</ul>
+</li>
+<li>自定义<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_spring_integration" target="_blank" rel="noopener">Spring Integration</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_http" target="_blank" rel="noopener">HTTP</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_example" target="_blank" rel="noopener">例</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_custom_sa_tag_in_zipkin" target="_blank" rel="noopener">Zipkin中的自定义SA标签</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_custom_service_name" target="_blank" rel="noopener">自定义服务名称</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_host_locator" target="_blank" rel="noopener">主机定位器</a></li>
+</ul>
+</li>
+<li>Span Data作为消息<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_zipkin_consumer" target="_blank" rel="noopener">Zipkin消费者</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_custom_consumer" target="_blank" rel="noopener">定制消费者</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_metrics" target="_blank" rel="noopener">度量</a></li>
+<li>集成<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_runnable_and_callable" target="_blank" rel="noopener">可运行和可调用</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_hystrix" target="_blank" rel="noopener">Hystrix</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_rxjava" target="_blank" rel="noopener">RxJava</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_http_integration" target="_blank" rel="noopener">HTTP集成</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_http_client_integration" target="_blank" rel="noopener">HTTP客户端集成</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_feign" target="_blank" rel="noopener">Feign</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_asynchronous_communication" target="_blank" rel="noopener">异步通信</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_messaging" target="_blank" rel="noopener">消息</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_zuul_2" target="_blank" rel="noopener">Zuul</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_running_examples" target="_blank" rel="noopener">运行示例</a></li>
+</ul>
+</li>
+<li><p>Spring Cloud Consul</p>
+<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-install" target="_blank" rel="noopener">安装Consul</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-agent" target="_blank" rel="noopener">Consul Agent</a></li>
+<li>服务发现与Consul<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_how_to_activate" target="_blank" rel="noopener">如何激活</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_registering_with_consul" target="_blank" rel="noopener">注册Consul</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_http_health_check" target="_blank" rel="noopener">HTTP健康检查</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_the_discoveryclient" target="_blank" rel="noopener">使用DiscoveryClient</a></li>
+</ul>
+</li>
+<li>具有Consul的分布式配置<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_how_to_activate_2" target="_blank" rel="noopener">如何激活</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customizing" target="_blank" rel="noopener">定制</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-config-watch" target="_blank" rel="noopener">配置观察</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-config-format" target="_blank" rel="noopener">YAML或Properties配置</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-config-git2consul" target="_blank" rel="noopener">git2consul与配置</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-failfast" target="_blank" rel="noopener">快速失败</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-retry" target="_blank" rel="noopener">Consul重试</a></li>
+<li>Spring Cloud Bus与Consul<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_how_to_activate_3" target="_blank" rel="noopener">如何激活</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-hystrix" target="_blank" rel="noopener">断路器与Hystrix</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-consul-turbine" target="_blank" rel="noopener">使用Turbine和Consul Hystrix指标聚合</a></li>
+</ul>
+</li>
+<li><p>Spring Cloud Zookeeper</p>
+<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#spring-cloud-zookeeper-install" target="_blank" rel="noopener">安装Zookeeper</a></li>
+<li>服务发现与Zookeeper<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_how_to_activate_4" target="_blank" rel="noopener">如何激活</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_registering_with_zookeeper" target="_blank" rel="noopener">注册Zookeeper</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_the_discoveryclient_2" target="_blank" rel="noopener">使用DiscoveryClient</a></li>
+</ul>
+</li>
+<li>使用Spring Cloud Zookeeper与Spring Cloud Netflix组件<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_ribbon_with_zookeeper" target="_blank" rel="noopener">Ribbon与Zookeeper</a></li>
+</ul>
+</li>
+<li>Spring Cloud Zookeeper和服务注册表<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_instance_status" target="_blank" rel="noopener">实例状态</a></li>
+</ul>
+</li>
+<li>Zookeeper依赖关系<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_the_zookeeper_dependencies" target="_blank" rel="noopener">使用Zookeeper依赖关系</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_how_to_activate_zookeeper_dependencies" target="_blank" rel="noopener">如何激活Zookeeper依赖关系</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_setting_up_zookeeper_dependencies" target="_blank" rel="noopener">设置Zookeeper依赖关系</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_configuring_spring_cloud_zookeeper_dependencies" target="_blank" rel="noopener">配置Spring Cloud Zookeeper依赖关系</a></li>
+</ul>
+</li>
+<li>Spring Cloud Zookeeper依赖关系观察者<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_how_to_activate_5" target="_blank" rel="noopener">如何激活</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_registering_a_listener" target="_blank" rel="noopener">注册listener</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_presence_checker" target="_blank" rel="noopener">存在检查</a></li>
+</ul>
+</li>
+<li>分布式配置与Zookeeper<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_how_to_activate_6" target="_blank" rel="noopener">如何激活</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customizing_2" target="_blank" rel="noopener">定制</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>Spring Cloud Security</p>
+<ul>
+<li>快速开始<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_oauth2_single_sign_on" target="_blank" rel="noopener">OAuth2单一登录</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_oauth2_protected_resource" target="_blank" rel="noopener">OAuth2受保护资源</a></li>
+</ul>
+</li>
+<li>更多详情<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_single_sign_on" target="_blank" rel="noopener">单点登录</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_token_relay" target="_blank" rel="noopener">令牌中继</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_configuring_authentication_downstream_of_a_zuul_proxy" target="_blank" rel="noopener">配置Zuul代理下游的认证</a></li>
+</ul>
+</li>
+<li><p>Spring Cloud为Cloud Foundry</p>
+<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_discovery" target="_blank" rel="noopener">发现</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_single_sign_on_2" target="_blank" rel="noopener">单点登录</a></li>
+</ul>
+</li>
+<li><p>Spring Cloud Contract</p>
+<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_spring_cloud_contract_2" target="_blank" rel="noopener">Spring Cloud Contract</a></li>
+<li>Spring Cloud Contract WireMock<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_registering_stubs_automatically" target="_blank" rel="noopener">自动注册存根</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_using_files_to_specify_the_stub_bodies" target="_blank" rel="noopener">使用文件指定存根体</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_alternative_using_junit_rules" target="_blank" rel="noopener">替代方法：使用JUnit规则</a></li>
+</ul>
+</li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_wiremock_and_spring_mvc_mocks" target="_blank" rel="noopener">WireMock和Spring MVC模拟器</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_generating_stubs_using_restdocs" target="_blank" rel="noopener">使用RestDocs生成存根</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_generating_contracts_using_restdocs" target="_blank" rel="noopener">使用RestDocs生成Contracts</a></li>
+<li>Spring Cloud Contract验证者<ul>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_introduction" target="_blank" rel="noopener">介绍</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_faq" target="_blank" rel="noopener">常问问题</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_spring_cloud_contract_verifier_http" target="_blank" rel="noopener">Spring Cloud Contract验证者HTTP</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_spring_cloud_contract_verifier_messaging" target="_blank" rel="noopener">Spring Cloud Contract验证器消息</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_spring_cloud_contract_stub_runner" target="_blank" rel="noopener">Spring Cloud Contract Stub Runner</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_core" target="_blank" rel="noopener">Stub Runner核心</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_junit_rule" target="_blank" rel="noopener">Stub Runner JUnit规则</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_spring_cloud" target="_blank" rel="noopener">Stub Runner Spring Cloud</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_boot_application" target="_blank" rel="noopener">Stub Runner启动应用程序</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_for_messaging" target="_blank" rel="noopener">Stub Runner用于消息传递</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_camel" target="_blank" rel="noopener">Stub Runner Camel</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_integration" target="_blank" rel="noopener">Stub Runner集成</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_stream" target="_blank" rel="noopener">Stub Runner Stream</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_stub_runner_spring_amqp" target="_blank" rel="noopener">Stub Runner Spring AMQP</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_contract_dsl" target="_blank" rel="noopener">Contract DSL</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_customization" target="_blank" rel="noopener">定制</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_pluggable_architecture" target="_blank" rel="noopener">可插拔架构</a></li>
+<li><a href="https://www.springcloud.cc/spring-cloud-dalston.html#_links" target="_blank" rel="noopener">链接</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://yoursite.com/2020/06/28/docs/spring/spring%20cloud%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/" title="docs/spring/spring cloud中文文档" target="_blank" rel="external">http://yoursite.com/2020/06/28/docs/spring/spring%20cloud%E4%B8%AD%E6%96%87%E6%96%87%E6%A1%A3/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/06/28/docs/%E4%B8%9A%E5%8A%A1/%E4%BE%9B%E5%BA%94%E9%93%BE/" title="docs/业务/供应链"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/06/28/docs/spring/spring%E8%A7%86%E9%A2%91/" title="docs/spring/spring视频"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

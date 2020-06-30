@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>docs/架构/亿级流量网站架构核心技术/亿级流量网站架构核心技术 | Hexo</title>
+  <meta name="description" content="1 设计原则概述1.1　高并发原则1.1.1　无状态1.1.2　拆分 系统维度  系统内部根据功能维度  读写维度 交易的各个系统都会读取数据，读的量大于写，因此可以拆分成商品写服务、商品读服务；  读服务可以考虑使用缓存提升性能； 写的量太大时，需要考虑分库分表； 有些聚合读取的场景，如商品详情页，可考虑数据异构拆分系统，将分散在多处的数据聚合到一处存储，以提升系统的性能和可靠性；   AOP维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docs&#x2F;架构&#x2F;亿级流量网站架构核心技术&#x2F;亿级流量网站架构核心技术">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="1 设计原则概述1.1　高并发原则1.1.1　无状态1.1.2　拆分 系统维度  系统内部根据功能维度  读写维度 交易的各个系统都会读取数据，读的量大于写，因此可以拆分成商品写服务、商品读服务；  读服务可以考虑使用缓存提升性能； 写的量太大时，需要考虑分库分表； 有些聚合读取的场景，如商品详情页，可考虑数据异构拆分系统，将分散在多处的数据聚合到一处存储，以提升系统的性能和可靠性；   AOP维">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E9%AB%98%E5%B9%B6%E5%8F%91.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E5%A4%9A%E7%BA%A7%E8%AF%BB%E9%99%8D%E7%BA%A7.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E9%99%8D%E7%BA%A7-%E5%89%8D%E7%BD%AE.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E9%AB%98%E5%8F%AF%E7%94%A8.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/dns-lvs.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BB%A4%E7%89%8C%E6%A1%B6.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E6%BC%8F%E6%A1%B6.png">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/cache.png">
+<meta property="article:published_time" content="2020-06-28T08:46:29.523Z">
+<meta property="article:modified_time" content="2020-06-28T08:46:29.523Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E9%AB%98%E5%B9%B6%E5%8F%91.png">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/d/">d</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%9D%82%E7%83%A9/">大杂烩</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/" rel="tag">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/document/" rel="tag">document</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hex/" rel="tag">hex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mock/" rel="tag">mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag">插件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag">软件</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/daily/" style="font-size: 14px;">daily</a> <a href="/tags/document/" style="font-size: 13px;">document</a> <a href="/tags/hex/" style="font-size: 13px;">hex</a> <a href="/tags/mock/" style="font-size: 13px;">mock</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 13px;">插件</a> <a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">测试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 13px;">软件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">75</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README.en/" class="title">docs/README.en</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README/" class="title">docs/README</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/d/">d</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E5%B7%A5%E5%85%B7/%E6%96%87%E6%A1%A3/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E5%92%8C%E6%96%87%E6%A1%A3/" class="title">hexo搭建博客和文档</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T15:01:41.000Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98/%E8%B0%83%E4%BC%98/" class="title">docs/系统调优/调优</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E8%BF%90%E7%BB%B4/mac/Mac%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" class="title">docs/运维/mac/Mac软件列表</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-docs/架构/亿级流量网站架构核心技术/亿级流量网站架构核心技术" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      docs/架构/亿级流量网站架构核心技术/亿级流量网站架构核心技术
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/" class="article-date">
+	  <time datetime="2020-06-28T08:46:29.523Z" itemprop="datePublished">2020-06-28</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="1-设计原则概述"><a href="#1-设计原则概述" class="headerlink" title="1 设计原则概述"></a>1 设计原则概述</h2><h3 id="1-1-高并发原则"><a href="#1-1-高并发原则" class="headerlink" title="1.1　高并发原则"></a>1.1　高并发原则</h3><h4 id="1-1-1-无状态"><a href="#1-1-1-无状态" class="headerlink" title="1.1.1　无状态"></a>1.1.1　无状态</h4><h4 id="1-1-2-拆分"><a href="#1-1-2-拆分" class="headerlink" title="1.1.2　拆分"></a>1.1.2　拆分</h4><ul>
+<li><p>系统维度</p>
+</li>
+<li><p>系统内部根据功能维度</p>
+</li>
+<li><p>读写维度</p>
+<p>交易的各个系统都会读取数据，读的量大于写，因此可以拆分成商品写服务、商品读服务；</p>
+<ul>
+<li>读服务可以考虑使用缓存提升性能；</li>
+<li>写的量太大时，需要考虑分库分表；</li>
+<li>有些聚合读取的场景，如商品详情页，可考虑数据异构拆分系统，将分散在多处的数据聚合到一处存储，以提升系统的性能和可靠性；</li>
+</ul>
+</li>
+<li><p>AOP维度 ：根据访问特征，按照AOP进行拆分，比如，商品详情页可以分为CDN、页面渲染系统；CDN就是一个AOP系统。</p>
+</li>
+</ul>
+<h4 id="1-1-3-服务化"><a href="#1-1-3-服务化" class="headerlink" title="1.1.3　服务化"></a>1.1.3　服务化</h4><h4 id="1-1-4-消息队列"><a href="#1-1-4-消息队列" class="headerlink" title="1.1.4　消息队列"></a>1.1.4　消息队列</h4><h4 id="1-1-5-数据异构"><a href="#1-1-5-数据异构" class="headerlink" title="1.1.5　数据异构"></a>1.1.5　数据异构</h4><p><a href="https://blog.csdn.net/AAA821/article/details/83791204" target="_blank" rel="noopener">数据异构</a> : 把数据按需（数据结构、存取方式、存取形式）异地构建存储。</p>
+<p>数据闭环和数据异构其实是一个概念，目的都是实现数据的自我控制，当其他系统出问题时不影响自己的系统，或者自己出问题时不影响其他系统。一般通过消息队列来实现数据分发。</p>
+<h4 id="1-1-6-缓存银弹"><a href="#1-1-6-缓存银弹" class="headerlink" title="1.1.6　缓存银弹"></a><strong>1.1.6　缓存银弹</strong></h4><h5 id="4-接入层缓存"><a href="#4-接入层缓存" class="headerlink" title="4.接入层缓存"></a>4.接入层缓存</h5><ul>
+<li><p>proxy_cache： 使用内存级/SSD级代理缓存来缓存内容。</p>
+</li>
+<li><p>proxy_cache_lock： 使用lock机制，将多个回源合并为一个，以减少回源量，并设置相应的lock超时时间。</p>
+</li>
+<li><p>shared_dict： 如果架构使用了nginx+lua实现，则可以考虑使用lua shared_dict进行cache，最大的好处就是reload缓存不会丢失。</p>
+<p><a href="https://www.jianshu.com/p/8b69e191e896" target="_blank" rel="noopener">NGINX和LUA</a></p>
+<p>Lua是一个可以嵌入到Nginx配置文件中的动态脚本语言，从而可以在Nginx请求处理的任何阶段执行各种Lua代码</p>
+</li>
+</ul>
+<p><strong>shared_dict：</strong> 如果架构使用了nginx+lua实现，则可以考虑使用lua shared_dict进行cache，最大的好处就是reload缓存不会丢失。</p>
+<h5 id="5-应用层缓存"><a href="#5-应用层缓存" class="headerlink" title="5.应用层缓存"></a><strong>5.应用层缓存</strong></h5><p>堆内缓存的最大问题就是重启时内存中的缓存会丢失，此时流量风暴来临，则有可能冲垮应用；还可考虑使用local redis cache来代替堆外内存；或在接入层使用shared_dict来将缓存前置，以减少风暴。</p>
+<p>local redis cache，通过在应用所在服务器上部署一组Redis，应用直接读本机Redis获取数据，多机之间使用主从机制同步数据。这种方式没有网络消耗，性能是最优的。</p>
+<h5 id="6-分布式缓存"><a href="#6-分布式缓存" class="headerlink" title="6.分布式缓存"></a><strong>6.分布式缓存</strong></h5><p>有一种机制是要废弃分布式缓存，改成应用local redis cache情况下，如果数据量不大，这种架构是最优的。但是如果数据量太大，单服务器存储不了，那么可以使用分片机制将流量分散到多台，或者直接用分布式缓存实现。常见的分片规则就是一致性哈希了。</p>
+<p><a href="https://www.jianshu.com/p/d240af4a671c" target="_blank" rel="noopener">https://www.jianshu.com/p/d240af4a671c</a></p>
+<p>关于redis分布式集群的常见实现方案</p>
+<ul>
+<li><p>基于客户端的分片 : shared Jedis</p>
+</li>
+<li><p>基于代理的redis分片</p>
+</li>
+<li><p>基于redis服务器的分片</p>
+<p>基于redis服务器的分片，又可称之为“查询路由”，就是客户端随机连接redis集群中的一个节点，向其发送读写请求，如果这个请求不能够被当前节点处理，则这个节点会将请求转发给正确的节点来处理。</p>
+<p>在redis 3.0版本，官方开始推出Redis Cluster方案</p>
+</li>
+</ul>
+<h4 id="1-1-7-并发化"><a href="#1-1-7-并发化" class="headerlink" title="1.1.7　并发化"></a>1.1.7　并发化</h4><p>读请求的多线程并发处理，加快响应。</p>
+<p><img src="%E9%AB%98%E5%B9%B6%E5%8F%91.png" alt=""></p>
+<h3 id="1-2-高可用原则"><a href="#1-2-高可用原则" class="headerlink" title="1.2　高可用原则"></a>1.2　高可用原则</h3><h4 id="1-2-1-降级"><a href="#1-2-1-降级" class="headerlink" title="1.2.1　降级"></a>1.2.1　降级</h4><ul>
+<li><p>开关集中化管理：通过推送机制把开关推送到各个应用。</p>
+</li>
+<li><p>可降级的多级读服务：比如服务调用降级为只读本地缓存、只读分布式缓存、只读默认降级数据（如库存状态默认有货）。</p>
+<p><img src="%E5%A4%9A%E7%BA%A7%E8%AF%BB%E9%99%8D%E7%BA%A7.png" alt=""></p>
+</li>
+<li><p>开关前置化：如架构是Nginx→Tomcat，可以将开关前置到Nginx接入层，在Nginx层做开关，请求流量回源后端应用或者只是一小部分流量回源。</p>
+<p><img src="%E9%99%8D%E7%BA%A7-%E5%89%8D%E7%BD%AE.png" alt=""></p>
+</li>
+<li><p>业务降级：当高并发流量来袭，在电商系统大促设计时保障用户能下单、能支付是核心要求，并保障数据最终一致性即可。这样就可以把一些同步调用改成异步调用，优先处理高优先级数据或特殊特征的数据，合理分配进入系统的流量，以保障系统可用。</p>
+</li>
+</ul>
+<p><img src="%E9%AB%98%E5%8F%AF%E7%94%A8.png" alt=""></p>
+<h4 id="1-2-2-限流"><a href="#1-2-2-限流" class="headerlink" title="1.2.2　限流"></a><strong>1.2.2　限流</strong></h4><p><a href="https://www.alibabacloud.com/help/zh/doc-detail/102571.htm" target="_blank" rel="noopener">阿里云限流文章</a></p>
+<p>流控，即<strong>流量控制</strong>（Flow Control），根据流量、并发线程数、响应时间等指标，把随机到来的流量调整成合适的形状，即流量塑形。避免应用被瞬时的流量高峰冲垮，从而保障应用的高可用性。</p>
+<h4 id="1-2-3-切流量"><a href="#1-2-3-切流量" class="headerlink" title="1.2.3　切流量"></a>1.2.3　切流量</h4><h3 id="1-3-业务设计原则"><a href="#1-3-业务设计原则" class="headerlink" title="1.3　业务设计原则"></a>1.3　业务设计原则</h3><h4 id="1-3-1-防重设计"><a href="#1-3-1-防重设计" class="headerlink" title="1.3.1　防重设计"></a>1.3.1　防重设计</h4><p>需要考虑重复提交，还有如下单扣减库存时需要防止重复扣减库存。解决方案可以考虑防重key、防重表。</p>
+<h4 id="1-3-2-幂等设计"><a href="#1-3-2-幂等设计" class="headerlink" title="1.3.2　幂等设计"></a>1.3.2　幂等设计</h4><p>经常会用到消息，而现有消息中间件基本不保证不发生重复消息的消费。因此，需要业务系统在重复消息消费时进行幂等处理。</p>
+<h4 id="1-3-3-流程可定义"><a href="#1-3-3-流程可定义" class="headerlink" title="1.3.3　流程可定义"></a>1.3.3　流程可定义</h4><h4 id="1-3-4-状态与状态机"><a href="#1-3-4-状态与状态机" class="headerlink" title="1.3.4　状态与状态机"></a>1.3.4　状态与状态机</h4><ul>
+<li><p>状态设计时应有状态轨迹</p>
+</li>
+<li><p>要考虑使用状态机来驱动状态的变更和后续流程节点操作，尤其当状态很多的时候使用状态机能更好地控制状态迁移。</p>
+<p><a href="https://www.jianshu.com/p/20d7f7c37b03" target="_blank" rel="noopener">状态机</a> 组成要素</p>
+<p><strong>现态</strong>：是指当前所处的状态。</p>
+<p><strong>条件</strong>：又称为<code>事件</code>。当一个条件被满足，可能将会触发一个动作，或者执行一次状态的<code>迁移</code>。</p>
+<p><strong>动作</strong>：条件满足后执行的<code>动作</code>行为。动作执行完毕后，可以迁移到新的状态，也可以仍旧保持原状态。动作不是必需的，当条件满足后，也可以不执行任何动作，直接迁移到新状态。</p>
+<p><strong>次态</strong>：条件满足后要迁往的新状态。“次态”是相对于“现态”而言的，“次态”一旦被激活，就转变成新的“现态”了。</p>
+</li>
+</ul>
+<ul>
+<li><p>还要考虑并发状态修改问题，如一个订单同时只能有一个修改。– 通过乐观锁方式。</p>
+</li>
+<li><p>要考虑状态变更的有序问题，以及状态变更消息的先到后到问题。–how?</p>
+</li>
+</ul>
+<h4 id="1-3-5-后台系统操作可反馈"><a href="#1-3-5-后台系统操作可反馈" class="headerlink" title="1.3.5　后台系统操作可反馈"></a>1.3.5　后台系统操作可反馈</h4><h2 id="2-高可用"><a href="#2-高可用" class="headerlink" title="2.高可用"></a>2.高可用</h2><h3 id="2-1-负载均衡与反向代理"><a href="#2-1-负载均衡与反向代理" class="headerlink" title="2.1 负载均衡与反向代理"></a>2.1 负载均衡与反向代理</h3><ul>
+<li><p>外网DNS应该用来实现用GSLB（全局负载均衡）进行流量调度，如将用户分配到离他最近的服务器上以提升体验。</p>
+</li>
+<li><p>内网DNS，可以实现简单的轮询负载均衡。但是，还是那句话，会有一定的缓存时间并且没有失败重试机制。因此，我们可以考虑选择如HaProxy和Nginx。</p>
+</li>
+<li><p>部署</p>
+<p>有Nginx就可以了。但Nginx一般用于七层负载均衡，其吞吐量是有一定限制的。为了提升整体吞吐量，会在DNS和Nginx之间引入接入层，如使用LVS（软件负载均衡器）、F5（硬负载均衡器）可以做四层负载均衡，即首先DNS解析到LVS/F5，然后LVS/F5转发给Nginx，再由Nginx转发给后端Real Server。</p>
+<p><img src="dns-lvs.png" alt=""></p>
+</li>
+<li><p>N层负载均衡</p>
+<ul>
+<li>二层负载均衡是通过改写报文的目标MAC地址为上游服务器MAC地址，源IP地址和目标IP地址是没有变的，负载均衡服务器和真实服务器共享同一个VIP，如LVS DR工作模式。</li>
+<li>四层负载均衡是根据端口将报文转发到上游服务器（不同的IP地址+端口），如LVS NAT模式、HaProxy</li>
+<li>七层负载均衡是根据端口号和应用层协议如HTTP协议的主机名、URL，转发报文到上游服务器（不同的IP地址+端口），如HaProxy、Nginx。</li>
+</ul>
+</li>
+</ul>
+<p>TODO 继续看  FIXME</p>
+<p><a href="https://blog.csdn.net/liuzhuchen/article/details/81913562" target="_blank" rel="noopener">Consul</a></p>
+<h3 id="2-3-隔离术"><a href="#2-3-隔离术" class="headerlink" title="2.3 隔离术"></a>2.3 隔离术</h3><ul>
+<li>隔离是指将系统或资源分割开，系统隔离是为了在系统发生故障时，能限定传播范围和影响范围，即发生故障后不会出现滚雪球效应，从而保证只有出问题的服务不可用，其他服务还是可用的。</li>
+<li>资源隔离通过隔离来减少资源竞争，保障服务间的相互不影响和可用性。</li>
+<li>隔离手段有线程隔离、进程隔离、集群隔离、机房隔离、读写隔离、快慢隔离、动静隔离、爬虫隔离等。出现系统问题时，可以考虑负载均衡路由、自动/手动切换分组或者降级等手段来保障可用性。</li>
+</ul>
+<p>TODO 继续看  FIXME</p>
+<h3 id="2-4-限流详解"><a href="#2-4-限流详解" class="headerlink" title="2.4 限流详解"></a>2.4 限流详解</h3><ul>
+<li>缓存目的是提升系统访问速度和增大系统处理能力，可谓是抗高并发流量的银弹。</li>
+<li>降级： 是当服务出问题或者影响到核心流程的性能，需要暂时屏蔽掉，待高峰过去或者问题解决后再打开的场景。</li>
+<li>而有些场景并不能用缓存和降级来解决，比如稀缺资源（秒杀、抢购）、写服务（如评论、下单）、频繁的复杂查询（评论的最后几页）等。因此，需有一种手段来限制这些场景下的并发/请求量，这种手段就是限流。</li>
+</ul>
+<h4 id="4-1-限流算法"><a href="#4-1-限流算法" class="headerlink" title="4.1　限流算法"></a>4.1　限流算法</h4><h5 id="4-1-1-令牌桶算法"><a href="#4-1-1-令牌桶算法" class="headerlink" title="4.1.1 令牌桶算法"></a>4.1.1 令牌桶算法</h5><p><img src="%E4%BB%A4%E7%89%8C%E6%A1%B6.png" alt=""></p>
+<h5 id="4-1-2-漏桶"><a href="#4-1-2-漏桶" class="headerlink" title="4.1.2 漏桶"></a>4.1.2 漏桶</h5><p><img src="%E6%BC%8F%E6%A1%B6.png" alt=""></p>
+<h5 id="4-1-3-令牌桶和漏桶算法对比如下。"><a href="#4-1-3-令牌桶和漏桶算法对比如下。" class="headerlink" title="4.1.3 令牌桶和漏桶算法对比如下。"></a>4.1.3 令牌桶和漏桶算法对比如下。</h5><ul>
+<li>令牌桶是按照固定速率往桶中添加令牌，请求是否被处理需要看桶中令牌是否足够，当令牌数减为零时，则拒绝新的请求。</li>
+<li>漏桶则是按照常量固定速率流出请求，流入请求速率任意，当流入的请求数累积到漏桶容量时，则新流入的请求被拒绝。</li>
+<li>令牌桶限制的是平均流入速率（允许突发请求，只要有令牌就可以处理，支持一次拿3个令牌，或4个令牌），并允许一定程度的突发流量。</li>
+<li>漏桶限制的是常量流出速率（即流出速率是一个固定常量值，比如都是1的速率流出，而不能一次是1，下次又是2），从而平滑突发流入速率。</li>
+<li>令牌桶允许一定程度的突发，而漏桶主要目的是平滑流入速率。</li>
+</ul>
+<h4 id="4-2-应用级限流"><a href="#4-2-应用级限流" class="headerlink" title="4.2　应用级限流"></a>4.2　应用级限流</h4><h4 id="4-3-分布式限流"><a href="#4-3-分布式限流" class="headerlink" title="4.3　分布式限流"></a>4.3　分布式限流</h4><p>TODO</p>
+<h3 id="6-超时与重试机制"><a href="#6-超时与重试机制" class="headerlink" title="6 超时与重试机制"></a>6 超时与重试机制</h3><p>TODO</p>
+<h2 id="3-高并发"><a href="#3-高并发" class="headerlink" title="3 高并发"></a>3 高并发</h2><h3 id="9-应用级缓存"><a href="#9-应用级缓存" class="headerlink" title="9　应用级缓存"></a>9　应用级缓存</h3><h4 id="9-4-Java缓存类型"><a href="#9-4-Java缓存类型" class="headerlink" title="9.4　Java缓存类型"></a>9.4　Java缓存类型</h4><h5 id="堆缓存"><a href="#堆缓存" class="headerlink" title="堆缓存"></a>堆缓存</h5><p>使用Java堆内存来存储缓存对象。使用堆缓存的好处是没有序列化/反序列化，是最快的缓存。缺点也很明显，当缓存的数据量很大时，GC（垃圾回收）暂停时间会变长，存储容量受限于堆空间大小。一般通过<strong>软引用/弱引用</strong>来存储缓存对象，即当堆内存不足时，可以强制回收这部分内存释放堆内存空间。一般使用堆缓存存储较热的数据。可以使用Guava Cache、Ehcache 3.x、MapDB实现。</p>
+<p><a href="https://www.cnblogs.com/ixixi/p/9467026.html" target="_blank" rel="noopener">https://www.cnblogs.com/ixixi/p/9467026.html</a></p>
+<ul>
+<li><p>软引用（SoftReference ）</p>
+<p>在内存空间足够的情况下，除非内存空间接近临界值、jvm即将抛出oom的时候，垃圾回收器才会将该引用对象进行回收，避免了系统内存溢出的情况。</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String value = <span class="keyword">new</span> String(“sy”);</span><br><span class="line">SoftReference sfRefer = <span class="keyword">new</span> SoftReference (value );</span><br><span class="line"></span><br><span class="line">sfRefer .get();<span class="comment">//可以获得引用对象值</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>弱引用（WeakReference）</li>
+</ul>
+<p>当垃圾回收器扫描到弱引用的对象的时候，不管内存空间是否足够，都会直接被垃圾回收器回收。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String value = <span class="keyword">new</span> String(“sy”);</span><br><span class="line">WeakReference weakRefer = <span class="keyword">new</span> WeakReference(value );</span><br><span class="line"></span><br><span class="line">System.gc();</span><br><span class="line"></span><br><span class="line">weakRefer.get();<span class="comment">//null</span></span><br></pre></td></tr></table></figure>
+<p><a href="http://www.ibloger.net/article/3345.html" target="_blank" rel="noopener">google gruva 缓存</a></p>
+<p>TODO gruva cache 使用</p>
+<h5 id="堆外缓存"><a href="#堆外缓存" class="headerlink" title="堆外缓存"></a>堆外缓存</h5><p>即缓存数据存储在堆外内存，可以减少GC暂停时间（堆对象转移到堆外，GC扫描和移动的对象变少了），可以支持更大的缓存空间（只受机器内存大小限制，不受堆空间的影响）。但是，读取数据时需要序列化/反序列化，因此会比堆缓存慢很多。可以使用Ehcache 3.x、MapDB实现。</p>
+<p><a href="https://www.cnblogs.com/scy251147/p/9634766.html" target="_blank" rel="noopener">堆外缓存介绍</a> </p>
+<p><a href="https://www.jianshu.com/p/17e72bb01bf1" target="_blank" rel="noopener">堆外介绍，EHcache</a></p>
+<p>TODO 具体使用堆外缓存</p>
+<h5 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h5><p>为了解决本地缓存如下问题</p>
+<ul>
+<li>单机容量问题</li>
+<li>数据一致性问题</li>
+<li>缓存不命中时，需要回源到DB/服务请求多变问题，</li>
+</ul>
+<p>整体方案<br><img src="cache.png" alt=""></p>
+<h4 id="9-5-应用级缓存示例"><a href="#9-5-应用级缓存示例" class="headerlink" title="9.5　应用级缓存示例"></a>9.5　应用级缓存示例</h4><p>TODO 章节详细</p>
+<h4 id="9-6-缓存使用模式实践"><a href="#9-6-缓存使用模式实践" class="headerlink" title="9.6　缓存使用模式实践"></a>9.6　缓存使用模式实践</h4><h5 id="Cache-Aside"><a href="#Cache-Aside" class="headerlink" title="Cache-Aside"></a>Cache-Aside</h5><p>Cache-Aside即业务代码围绕着Cache写，是由业务代码直接维护缓存，示例代码如下所示。</p>
+<ul>
+<li><p>读场景，先从缓存获取数据，如果没有命中，则回源到SoR并将源数据放入缓存供下次读取使用。</p>
+</li>
+<li><p>写场景，先将数据写入SoR，写入成功后立即将数据同步写入缓存。</p>
+</li>
+</ul>
+<p>Cache-Aside适合使用AOP模式去实现，具体操作可以参考笔者的博客《Spring Cache抽象详解》。</p>
+<p>对于Cache-Aside，可能存在并发更新情况，即如果多个应用实例同时更新，如何处理？</p>
+<ul>
+<li><p>如果是用户维度的数据（如订单数据、用户数据），这种几率非常小，因为并发的情况很少，可以不考虑这个问题，加上过期时间来解决即可。</p>
+</li>
+<li><p>对于如商品这种基础数据，可以考虑使用canal订阅binlog，来进行增量更新分布式缓存，这样不会存在缓存数据不一致的情况。但是，缓存更新会存在延迟。而本地缓存可根据不一致容忍度设置合理的过期时间。</p>
+</li>
+<li><p>读服务场景，可以考虑使用一致性哈希，将相同的操作负载均衡到同一个实例，从而减少并发几率。或者设置比较短的过期时间，可参考“第17章 京东商品详情页服务闭环实践”。</p>
+</li>
+</ul>
+<h5 id="Cache-As-SoR"><a href="#Cache-As-SoR" class="headerlink" title="Cache-As-SoR"></a>Cache-As-SoR</h5><p>Cache-As-SoR即把Cache看作为SoR，所有操作都是对Cache进行，然后Cache再委托给SoR进行真实的读/写。即业务代码中只看到Cache的操作，看不到关于SoR相关的代码。有三种实现：read-through、write-through、write-behind。</p>
+<h6 id="Read-Through"><a href="#Read-Through" class="headerlink" title="Read-Through"></a>Read-Through</h6><p>Read-Through，业务代码首先调用Cache，如果Cache不命中由Cache回源到SoR，而不是业务代码（即由Cache读SoR）。使用Read-Through模式，需要配置一个CacheLoader组件用来回源到SoR加载源数据。Guava Cache和Ehcache 3.x都支持该模式。</p>
+<p>使用CacheLoader后有几个好处。</p>
+<ul>
+<li><p>应用业务代码更简洁了，不需要像Cache-Aside模式那样缓存查询代码和SoR代码交织在一起。如果缓存使用逻辑散落在多处，则使用这种方式很简单地消除了重复代码。</p>
+</li>
+<li><p>解决Dog-pile effect，即当某个缓存失效时，又有大量相同的请求没命中缓存，从而使请求同时到后端，导致后端压力太大，此时限定一个请求去拿即可。</p>
+</li>
+</ul>
+<h6 id="Write-Through"><a href="#Write-Through" class="headerlink" title="Write-Through"></a>Write-Through</h6><p>Write-Through，被称为穿透写模式/直写模式——业务代码首先调用Cache写（新增/修改）数据，然后由Cache负责写缓存和写SoR，而不是由业务代码。使用Write-Through模式需要配置一个CacheWriter组件用来回写SoR。</p>
+<h6 id="Write-Behind"><a href="#Write-Behind" class="headerlink" title="Write-Behind"></a>Write-Behind</h6><p>Write-Behind，也叫Write-Back，我们称之为回写模式。不同于Write-Through是同步写SoR和Cache，Write-Behind是异步写。异步之后可以实现批量写、合并写、延时和限流。</p>
+<h3 id="10-HTTP缓存"><a href="#10-HTTP缓存" class="headerlink" title="10 HTTP缓存"></a>10 HTTP缓存</h3><p>略</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/" title="docs/架构/亿级流量网站架构核心技术/亿级流量网站架构核心技术" target="_blank" rel="external">http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/%E4%BA%BF%E7%BA%A7%E6%B5%81%E9%87%8F%E7%BD%91%E7%AB%99%E6%9E%B6%E6%9E%84%E6%A0%B8%E5%BF%83%E6%8A%80%E6%9C%AF/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/01%E7%9B%AE%E5%BD%95/" title="docs/架构/架构/01目录"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/06/28/docs/%E6%8A%80%E6%9C%AF%E6%A0%88TODO/my%E6%8A%80%E6%9C%AF%E6%A0%88/" title="docs/技术栈TODO/my技术栈"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

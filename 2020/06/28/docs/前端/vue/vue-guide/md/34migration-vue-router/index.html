@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Migration from Vue Router 0.7.x | Hexo</title>
+  <meta name="description" content="Only Vue Router 2 is compatible with Vue 2, so if you’re updating Vue, you’ll have to update Vue Router as well. That’s why we’ve included details on the migration path here in the main docs. For a c">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Migration from Vue Router 0.7.x">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/34migration-vue-router/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="Only Vue Router 2 is compatible with Vue 2, so if you’re updating Vue, you’ll have to update Vue Router as well. That’s why we’ve included details on the migration path here in the main docs. For a c">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-06-28T08:46:29.516Z">
+<meta property="article:modified_time" content="2020-06-28T08:46:29.517Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/34migration-vue-router/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/d/">d</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%9D%82%E7%83%A9/">大杂烩</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/" rel="tag">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/document/" rel="tag">document</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hex/" rel="tag">hex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mock/" rel="tag">mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag">插件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag">软件</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/daily/" style="font-size: 14px;">daily</a> <a href="/tags/document/" style="font-size: 13px;">document</a> <a href="/tags/hex/" style="font-size: 13px;">hex</a> <a href="/tags/mock/" style="font-size: 13px;">mock</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 13px;">插件</a> <a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">测试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 13px;">软件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">75</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README.en/" class="title">docs/README.en</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README/" class="title">docs/README</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/d/">d</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E5%B7%A5%E5%85%B7/%E6%96%87%E6%A1%A3/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E5%92%8C%E6%96%87%E6%A1%A3/" class="title">hexo搭建博客和文档</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T15:01:41.000Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98/%E8%B0%83%E4%BC%98/" class="title">docs/系统调优/调优</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E8%BF%90%E7%BB%B4/mac/Mac%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" class="title">docs/运维/mac/Mac软件列表</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-docs/前端/vue/vue-guide/md/34migration-vue-router" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Migration from Vue Router 0.7.x
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/34migration-vue-router/" class="article-date">
+	  <time datetime="2020-06-28T08:46:29.516Z" itemprop="datePublished">2020-06-28</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/34migration-vue-router/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <blockquote>
+<p>Only Vue Router 2 is compatible with Vue 2, so if you’re updating Vue, you’ll have to update Vue Router as well. That’s why we’ve included details on the migration path here in the main docs. For a complete guide on using the new Vue Router, see the <a href="https://router.vuejs.org/en/" target="_blank" rel="noopener">Vue Router docs</a>.</p>
+</blockquote>
+<h2 id="Router-Initialization"><a href="#Router-Initialization" class="headerlink" title="Router Initialization"></a>Router Initialization</h2><h3 id="router-start-replaced"><a href="#router-start-replaced" class="headerlink" title="router.start replaced"></a><code>router.start</code> <sup>replaced</sup></h3><p>There is no longer a special API to initialize an app with Vue Router. That means instead of:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">router.start(&#123;</span><br><span class="line">  template: <span class="string">'&lt;router-view&gt;&lt;/router-view&gt;'</span></span><br><span class="line">&#125;, <span class="string">'#app'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>You pass a router property to a Vue instance:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  router: router,</span><br><span class="line">  template: <span class="string">'&lt;router-view&gt;&lt;/router-view&gt;'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Or, if you’re using the runtime-only build of Vue:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> Vue(&#123;</span><br><span class="line">  el: <span class="string">'#app'</span>,</span><br><span class="line">  router: router,</span><br><span class="line">  render: <span class="function"><span class="params">h</span> =&gt;</span> h(<span class="string">'router-view'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of <code>router.start</code> being called.</p>
+</div>
+
+
+<h2 id="Route-Definitions"><a href="#Route-Definitions" class="headerlink" title="Route Definitions"></a>Route Definitions</h2><h3 id="router-map-replaced"><a href="#router-map-replaced" class="headerlink" title="router.map replaced"></a><code>router.map</code> <sup>replaced</sup></h3><p>Routes are now defined as an array on a <a href="https://router.vuejs.org/en/essentials/getting-started.html#javascript" target="_blank" rel="noopener"><code>routes</code> option</a> at router instantiation. So these routes for example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">router.map(&#123;</span><br><span class="line">  <span class="string">'/foo'</span>: &#123;</span><br><span class="line">    component: Foo</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="string">'/bar'</span>: &#123;</span><br><span class="line">    component: Bar</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>Will instead be defined with:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">  routes: [</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">'/foo'</span>, <span class="attr">component</span>: Foo &#125;,</span><br><span class="line">    &#123; <span class="attr">path</span>: <span class="string">'/bar'</span>, <span class="attr">component</span>: Bar &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>The array syntax allows more predictable route matching, since iterating over an object is not guaranteed to use the same key order across browsers.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of <code>router.map</code> being called.</p>
+</div>
+
+
+<h3 id="router-on-removed"><a href="#router-on-removed" class="headerlink" title="router.on removed"></a><code>router.on</code> <sup>removed</sup></h3><p>If you need to programmatically generate routes when starting up your app, you can do so by dynamically pushing definitions to a routes array. For example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Normal base routes</span></span><br><span class="line"><span class="keyword">var</span> routes = [</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment">// Dynamically generated routes</span></span><br><span class="line">marketingPages.forEach(<span class="function"><span class="keyword">function</span> (<span class="params">page</span>) </span>&#123;</span><br><span class="line">  routes.push(&#123;</span><br><span class="line">    path: <span class="string">'/marketing/'</span> + page.slug</span><br><span class="line">    component: &#123;</span><br><span class="line">      extends: MarketingComponent</span><br><span class="line">      data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> &#123; <span class="attr">page</span>: page &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> Router(&#123;</span><br><span class="line">  routes: routes</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>If you need to add new routes after the router has been instantiated, you can replace the router’s matcher with a new one that includes the route you’d like to add:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">router.match = createMatcher(</span><br><span class="line">  [&#123;</span><br><span class="line">    path: <span class="string">'/my/new/path'</span>,</span><br><span class="line">    component: MyComponent</span><br><span class="line">  &#125;].concat(router.options.routes)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of <code>router.on</code> being called.</p>
+</div>
+
+
+<h3 id="router-beforeEach-changed"><a href="#router-beforeEach-changed" class="headerlink" title="router.beforeEach changed"></a><code>router.beforeEach</code> <sup>changed</sup></h3><p><code>router.beforeEach</code> now works asynchronously and takes a <code>next</code> function as its third argument.</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">router.beforeEach(<span class="function"><span class="keyword">function</span> (<span class="params">transition</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (transition.to.path === <span class="string">'/forbidden'</span>) &#123;</span><br><span class="line">    transition.abort()</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    transition.next()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">router.beforeEach(<span class="function"><span class="keyword">function</span> (<span class="params">to, from, next</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (to.path === <span class="string">'/forbidden'</span>) &#123;</span><br><span class="line">    next(<span class="literal">false</span>)</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    next()</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h3 id="subRoutes-renamed"><a href="#subRoutes-renamed" class="headerlink" title="subRoutes renamed"></a><code>subRoutes</code> <sup>renamed</sup></h3><p><a href="https://router.vuejs.org/en/essentials/nested-routes.html" target="_blank" rel="noopener">Renamed to <code>children</code></a> for consistency within Vue and with other routing libraries.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>subRoutes</code> option.</p>
+</div>
+
+
+<h3 id="router-redirect-replaced"><a href="#router-redirect-replaced" class="headerlink" title="router.redirect replaced"></a><code>router.redirect</code> <sup>replaced</sup></h3><p>This is now an <a href="https://router.vuejs.org/en/essentials/redirect-and-alias.html" target="_blank" rel="noopener">option on route definitions</a>. So for example, you will update:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">router.redirect(&#123;</span><br><span class="line">  <span class="string">'/tos'</span>: <span class="string">'/terms-of-service'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>to a definition like below in your <code>routes</code> configuration:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  path: <span class="string">'/tos'</span>,</span><br><span class="line">  redirect: <span class="string">'/terms-of-service'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of <code>router.redirect</code> being called.</p>
+</div>
+
+
+<h3 id="router-alias-replaced"><a href="#router-alias-replaced" class="headerlink" title="router.alias replaced"></a><code>router.alias</code> <sup>replaced</sup></h3><p>This is now an <a href="https://router.vuejs.org/en/essentials/redirect-and-alias.html" target="_blank" rel="noopener">option on the definition for the route</a> you’d like to alias to. So for example, you will update:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">router.alias(&#123;</span><br><span class="line">  <span class="string">'/manage'</span>: <span class="string">'/admin'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>to a definition like below in your <code>routes</code> configuration:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  path: <span class="string">'/admin'</span>,</span><br><span class="line">  component: AdminPanel,</span><br><span class="line">  alias: <span class="string">'/manage'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>If you need multiple aliases, you can also use an array syntax:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alias: [<span class="string">'/manage'</span>, <span class="string">'/administer'</span>, <span class="string">'/administrate'</span>]</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of <code>router.alias</code> being called.</p>
+</div>
+
+
+<h3 id="Arbitrary-Route-Properties-replaced"><a href="#Arbitrary-Route-Properties-replaced" class="headerlink" title="Arbitrary Route Properties replaced"></a>Arbitrary Route Properties <sup>replaced</sup></h3><p>Arbitrary route properties must now be scoped under the new meta property, to avoid conflicts with future features. So for example, if you had defined:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'/admin'</span>: &#123;</span><br><span class="line">  component: AdminPanel,</span><br><span class="line">  requiresAuth: <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Then you would now update it to:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  path: <span class="string">'/admin'</span>,</span><br><span class="line">  component: AdminPanel,</span><br><span class="line">  meta: &#123;</span><br><span class="line">    requiresAuth: <span class="literal">true</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Then when later accessing this property on a route, you will still go through meta. For example:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (route.meta.requiresAuth) &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of arbitrary route properties not scoped under meta.</p>
+</div>
+
+
+<h3 id="Syntax-for-Arrays-in-Queries-removed"><a href="#Syntax-for-Arrays-in-Queries-removed" class="headerlink" title="[] Syntax for Arrays in Queries removed"></a>[] Syntax for Arrays in Queries <sup>removed</sup></h3><p>When passing arrays to query parameters the QueryString syntax is no longer <code>/foo?users[]=Tom&amp;users[]=Jerry</code>, instead, the new syntax is <code>/foo?users=Tom&amp;users=Jerry</code>. Internally, <code>$route.query.users</code> will still be an Array, but if there’s only one parameter in the query: <code>/foo?users=Tom</code>, when directly accessing this route, there’s no way for the router to know if we were expecting <code>users</code> to be an Array. Because of this, consider adding a computed property and replacing every reference of <code>$route.query.users</code> with it:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">  <span class="comment">// ...</span></span><br><span class="line">  computed: &#123;</span><br><span class="line">    <span class="comment">// users will always be an array</span></span><br><span class="line">    users () &#123;</span><br><span class="line">      <span class="keyword">const</span> users = <span class="keyword">this</span>.$route.query.users</span><br><span class="line">      <span class="keyword">return</span> <span class="built_in">Array</span>.isArray(users) ? users : [users]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Route-Matching"><a href="#Route-Matching" class="headerlink" title="Route Matching"></a>Route Matching</h2><p>Route matching now uses <a href="https://github.com/pillarjs/path-to-regexp" target="_blank" rel="noopener">path-to-regexp</a> under the hood, making it much more flexible than previously.</p>
+<h3 id="One-or-More-Named-Parameters-changed"><a href="#One-or-More-Named-Parameters-changed" class="headerlink" title="One or More Named Parameters changed"></a>One or More Named Parameters <sup>changed</sup></h3><p>The syntax has changed slightly, so <code>/category/*tags</code> for example, should be updated to <code>/category/:tags+</code>.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the obsolete route syntax.</p>
+</div>
+
+
+<h2 id="Links"><a href="#Links" class="headerlink" title="Links"></a>Links</h2><h3 id="v-link-replaced"><a href="#v-link-replaced" class="headerlink" title="v-link replaced"></a><code>v-link</code> <sup>replaced</sup></h3><p>The <code>v-link</code> directive has been replaced with a new <a href="https://router.vuejs.org/en/api/router-link.html" target="_blank" rel="noopener"><code>&lt;router-link&gt;</code> component</a>, as this sort of job is now solely the responsibility of components in Vue 2. That means whenever wherever you have a link like this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">v-link</span>=<span class="string">"'/about'"</span>&gt;</span>About<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>You’ll need to update it like this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">router-link</span> <span class="attr">to</span>=<span class="string">"/about"</span>&gt;</span>About<span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>Note that <code>target=&quot;_blank&quot;</code> is not supported on <code>&lt;router-link&gt;</code>, so if you need to open a link in a new tab, you have to use <code>&lt;a&gt;</code> instead.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>v-link</code> directive.</p>
+</div>
+
+
+<h3 id="v-link-active-replaced"><a href="#v-link-active-replaced" class="headerlink" title="v-link-active replaced"></a><code>v-link-active</code> <sup>replaced</sup></h3><p>The <code>v-link-active</code> directive has also been replaced by the <code>tag</code> attribute on <a href="https://router.vuejs.org/en/api/router-link.html" target="_blank" rel="noopener">the <code>&lt;router-link&gt;</code> component</a>. So for example, you’ll update this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">v-link-active</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span> <span class="attr">v-link</span>=<span class="string">"'/about'"</span>&gt;</span>About<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>to this:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">router-link</span> <span class="attr">tag</span>=<span class="string">"li"</span> <span class="attr">to</span>=<span class="string">"/about"</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">a</span>&gt;</span>About<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">router-link</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>The <code>&lt;a&gt;</code> will be the actual link (and will get the correct href), but the active class will be applied to the outer <code>&lt;li&gt;</code>.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>v-link-active</code> directive.</p>
+</div>
+
+
+<h2 id="Programmatic-Navigation"><a href="#Programmatic-Navigation" class="headerlink" title="Programmatic Navigation"></a>Programmatic Navigation</h2><h3 id="router-go-changed"><a href="#router-go-changed" class="headerlink" title="router.go changed"></a><code>router.go</code> <sup>changed</sup></h3><p>For consistency with the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API" target="_blank" rel="noopener">HTML5 History API</a>, <code>router.go</code> is now only used for <a href="https://router.vuejs.org/en/essentials/navigation.html#routergon" target="_blank" rel="noopener">back/forward navigation</a>, while <a href="https://router.vuejs.org/en/essentials/navigation.html#routerpushlocation" target="_blank" rel="noopener"><code>router.push</code></a> is used to navigate to a specific page.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of <code>router.go</code> being used where <code>router.push</code> should be used instead.</p>
+</div>
+
+
+<h2 id="Router-Options-Modes"><a href="#Router-Options-Modes" class="headerlink" title="Router Options: Modes"></a>Router Options: Modes</h2><h3 id="hashbang-false-removed"><a href="#hashbang-false-removed" class="headerlink" title="hashbang: false removed"></a><code>hashbang: false</code> <sup>removed</sup></h3><p>Hashbangs are no longer required for Google to crawl a URL, so they are no longer the default (or even an option) for the hash strategy.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>hashbang: false</code> option.</p>
+</div>
+
+
+<h3 id="history-true-replaced"><a href="#history-true-replaced" class="headerlink" title="history: true replaced"></a><code>history: true</code> <sup>replaced</sup></h3><p>All routing mode options have been condensed into a single <a href="https://router.vuejs.org/en/api/options.html#mode" target="_blank" rel="noopener"><code>mode</code> option</a>. Update:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">  history: <span class="string">'true'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>to:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">  mode: <span class="string">'history'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>history: true</code> option.</p>
+</div>
+
+
+<h3 id="abstract-true-replaced"><a href="#abstract-true-replaced" class="headerlink" title="abstract: true replaced"></a><code>abstract: true</code> <sup>replaced</sup></h3><p>All routing mode options have been condensed into a single <a href="https://router.vuejs.org/en/api/options.html#mode" target="_blank" rel="noopener"><code>mode</code> option</a>. Update:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">  abstract: <span class="string">'true'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>to:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> router = <span class="keyword">new</span> VueRouter(&#123;</span><br><span class="line">  mode: <span class="string">'abstract'</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>abstract: true</code> option.</p>
+</div>
+
+
+<h2 id="Route-Options-Misc"><a href="#Route-Options-Misc" class="headerlink" title="Route Options: Misc"></a>Route Options: Misc</h2><h3 id="saveScrollPosition-replaced"><a href="#saveScrollPosition-replaced" class="headerlink" title="saveScrollPosition replaced"></a><code>saveScrollPosition</code> <sup>replaced</sup></h3><p>This has been replaced with a <a href="https://router.vuejs.org/en/advanced/scroll-behavior.html" target="_blank" rel="noopener"><code>scrollBehavior</code> option</a> that accepts a function, so that the scroll behavior is completely customizable - even per route. This opens many new possibilities, but to replicate the old behavior of:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">saveScrollPosition: <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p>You can replace it with:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">scrollBehavior: <span class="function"><span class="keyword">function</span> (<span class="params">to, from, savedPosition</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> savedPosition || &#123; <span class="attr">x</span>: <span class="number">0</span>, <span class="attr">y</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>saveScrollPosition: true</code> option.</p>
+</div>
+
+
+<h3 id="root-renamed"><a href="#root-renamed" class="headerlink" title="root renamed"></a><code>root</code> <sup>renamed</sup></h3><p>Renamed to <code>base</code> for consistency with <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base" target="_blank" rel="noopener">the HTML <code>&lt;base&gt;</code> element</a>.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>root</code> option.</p>
+</div>
+
+
+<h3 id="transitionOnLoad-removed"><a href="#transitionOnLoad-removed" class="headerlink" title="transitionOnLoad removed"></a><code>transitionOnLoad</code> <sup>removed</sup></h3><p>This option is no longer necessary now that Vue’s transition system has explicit <a href="transitions.html#Transitions-on-Initial-Render"><code>appear</code> transition control</a>.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>transitionOnLoad: true</code> option.</p>
+</div>
+
+
+<h3 id="suppressTransitionError-removed"><a href="#suppressTransitionError-removed" class="headerlink" title="suppressTransitionError removed"></a><code>suppressTransitionError</code> <sup>removed</sup></h3><p>Removed due to hooks simplification. If you really must suppress transition errors, you can use <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/try...catch" target="_blank" rel="noopener"><code>try</code>…<code>catch</code></a> instead.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>suppressTransitionError: true</code> option.</p>
+</div>
+
+
+<h2 id="Route-Hooks"><a href="#Route-Hooks" class="headerlink" title="Route Hooks"></a>Route Hooks</h2><h3 id="activate-replaced"><a href="#activate-replaced" class="headerlink" title="activate replaced"></a><code>activate</code> <sup>replaced</sup></h3><p>Use <a href="https://router.vuejs.org/en/advanced/navigation-guards.html#incomponent-guards" target="_blank" rel="noopener"><code>beforeRouteEnter</code></a> in the component instead.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>beforeRouteEnter</code> hook.</p>
+</div>
+
+
+<h3 id="canActivate-replaced"><a href="#canActivate-replaced" class="headerlink" title="canActivate replaced"></a><code>canActivate</code> <sup>replaced</sup></h3><p>Use <a href="https://router.vuejs.org/en/advanced/navigation-guards.html#perroute-guard" target="_blank" rel="noopener"><code>beforeEnter</code></a> in the route instead.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>canActivate</code> hook.</p>
+</div>
+
+
+<h3 id="deactivate-removed"><a href="#deactivate-removed" class="headerlink" title="deactivate removed"></a><code>deactivate</code> <sup>removed</sup></h3><p>Use the component’s <a href="../api/#beforeDestroy"><code>beforeDestroy</code></a> or <a href="../api/#destroyed"><code>destroyed</code></a> hooks instead.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>deactivate</code> hook.</p>
+</div>
+
+
+<h3 id="canDeactivate-replaced"><a href="#canDeactivate-replaced" class="headerlink" title="canDeactivate replaced"></a><code>canDeactivate</code> <sup>replaced</sup></h3><p>Use <a href="https://router.vuejs.org/en/advanced/navigation-guards.html#incomponent-guards" target="_blank" rel="noopener"><code>beforeRouteLeave</code></a> in the component instead.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>canDeactivate</code> hook.</p>
+</div>
+
+
+<h3 id="canReuse-false-removed"><a href="#canReuse-false-removed" class="headerlink" title="canReuse: false removed"></a><code>canReuse: false</code> <sup>removed</sup></h3><p>There’s no longer a use case for this in the new Vue Router.</p>
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>canReuse: false</code> option.</p>
+</div>
+
+
+<h3 id="data-replaced"><a href="#data-replaced" class="headerlink" title="data replaced"></a><code>data</code> <sup>replaced</sup></h3><p>The <code>$route</code> property is now reactive, so you can use a watcher to react to route changes, like this:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">watch: &#123;</span><br><span class="line">  <span class="string">'$route'</span>: <span class="string">'fetchData'</span></span><br><span class="line">&#125;,</span><br><span class="line">methods: &#123;</span><br><span class="line">  fetchData: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>data</code> hook.</p>
+</div>
+
+
+<h3 id="loadingRouteData-removed"><a href="#loadingRouteData-removed" class="headerlink" title="$loadingRouteData removed"></a><code>$loadingRouteData</code> <sup>removed</sup></h3><p>Define your own property (e.g. <code>isLoading</code>), then update the loading state in a watcher on the route. For example, if fetching data with <a href="https://github.com/mzabriskie/axios" target="_blank" rel="noopener">axios</a>:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    posts: [],</span><br><span class="line">    isLoading: <span class="literal">false</span>,</span><br><span class="line">    fetchError: <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br><span class="line">watch: &#123;</span><br><span class="line">  <span class="string">'$route'</span>: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> self = <span class="keyword">this</span></span><br><span class="line">    self.isLoading = <span class="literal">true</span></span><br><span class="line">    self.fetchData().then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">      self.isLoading = <span class="literal">false</span></span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;,</span><br><span class="line">methods: &#123;</span><br><span class="line">  fetchData: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> self = <span class="keyword">this</span></span><br><span class="line">    <span class="keyword">return</span> axios.get(<span class="string">'/api/posts'</span>)</span><br><span class="line">      .then(<span class="function"><span class="keyword">function</span> (<span class="params">response</span>) </span>&#123;</span><br><span class="line">        self.posts = response.data.posts</span><br><span class="line">      &#125;)</span><br><span class="line">      .catch(<span class="function"><span class="keyword">function</span> (<span class="params">error</span>) </span>&#123;</span><br><span class="line">        self.fetchError = error</span><br><span class="line">      &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<div class="upgrade-path">
+  <h4>Upgrade Path</h4>
+  <p>Run the <a href="https://github.com/vuejs/vue-migration-helper" target="_blank" rel="noopener">migration helper</a> on your codebase to find examples of the <code>$loadingRouteData</code> meta property.</p>
+</div>
+
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/34migration-vue-router/" title="Migration from Vue Router 0.7.x" target="_blank" rel="external">http://yoursite.com/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/34migration-vue-router/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/32reactivity/" title="Reactivity in Depth"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/06/28/docs/%E5%89%8D%E7%AB%AF/vue/vue-guide/md/33migration/" title="Migration from Vue 1.x"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

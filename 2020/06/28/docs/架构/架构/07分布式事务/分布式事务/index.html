@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>docs/架构/架构/07分布式事务/分布式事务 | Hexo</title>
+  <meta name="description" content="07 分布式事务如何选择分布式事务形态（TCC、SAGA、补偿、基于消息的最终一致等等） 分布式事务 数据不一致的原因 多份数据 多个领域服务 多个DB DB + 缓存    分布式事务分类 刚性分布式事务 强一致性 XA 模型 - ACID CAP - &gt; CP   柔性分布式事务 最终一致性 CAP，BASE理论  ＋ AP    强一致性 角色 AX ：定义事务的边界 RX : 管理各">
+<meta property="og:type" content="article">
+<meta property="og:title" content="docs&#x2F;架构&#x2F;架构&#x2F;07分布式事务&#x2F;分布式事务">
+<meta property="og:url" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="07 分布式事务如何选择分布式事务形态（TCC、SAGA、补偿、基于消息的最终一致等等） 分布式事务 数据不一致的原因 多份数据 多个领域服务 多个DB DB + 缓存    分布式事务分类 刚性分布式事务 强一致性 XA 模型 - ACID CAP - &gt; CP   柔性分布式事务 最终一致性 CAP，BASE理论  ＋ AP    强一致性 角色 AX ：定义事务的边界 RX : 管理各">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Saga-%E9%9B%86%E4%B8%AD%E5%BC%8F%E7%9A%84Saga%E5%AE%9E%E7%8E%B0.jpeg">
+<meta property="og:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Saga-%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84Saga%E5%AE%9E%E7%8E%B0.jpeg">
+<meta property="article:published_time" content="2020-06-28T08:46:29.540Z">
+<meta property="article:modified_time" content="2020-06-28T08:46:29.540Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/Saga-%E9%9B%86%E4%B8%AD%E5%BC%8F%E7%9A%84Saga%E5%AE%9E%E7%8E%B0.jpeg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 4.2.1"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="Search" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="Type something..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">Home</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">Archives</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">Categories</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">Tags</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">Repository</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">Books</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">Links</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">About</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">Board</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/d/">d</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%A4%A7%E6%9D%82%E7%83%A9/">大杂烩</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%B7%A5%E5%85%B7/">工具</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%B5%8B%E8%AF%95/">测试</a><span class="category-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/daily/" rel="tag">daily</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/document/" rel="tag">document</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hex/" rel="tag">hex</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mock/" rel="tag">mock</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%8F%92%E4%BB%B6/" rel="tag">插件</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%8B%E8%AF%95/" rel="tag">测试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AF%E4%BB%B6/" rel="tag">软件</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/daily/" style="font-size: 14px;">daily</a> <a href="/tags/document/" style="font-size: 13px;">document</a> <a href="/tags/hex/" style="font-size: 13px;">hex</a> <a href="/tags/mock/" style="font-size: 13px;">mock</a> <a href="/tags/%E6%8F%92%E4%BB%B6/" style="font-size: 13px;">插件</a> <a href="/tags/%E6%B5%8B%E8%AF%95/" style="font-size: 13px;">测试</a> <a href="/tags/%E8%BD%AF%E4%BB%B6/" style="font-size: 13px;">软件</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Archive</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/06/">June 2020</a><span class="archive-list-count">75</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">July 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">July 2016</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README.en/" class="title">docs/README.en</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/30/docs/README/" class="title">docs/README</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-30T11:24:39.868Z" itemprop="datePublished">2020-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/d/">d</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E5%B7%A5%E5%85%B7/%E6%96%87%E6%A1%A3/hexo%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2%E5%92%8C%E6%96%87%E6%A1%A3/" class="title">hexo搭建博客和文档</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T15:01:41.000Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E7%B3%BB%E7%BB%9F%E8%B0%83%E4%BC%98/%E8%B0%83%E4%BC%98/" class="title">docs/系统调优/调优</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2020/06/28/docs/%E8%BF%90%E7%BB%B4/mac/Mac%E8%BD%AF%E4%BB%B6%E5%88%97%E8%A1%A8/" class="title">docs/运维/mac/Mac软件列表</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-06-28T08:46:29.549Z" itemprop="datePublished">2020-06-28</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-docs/架构/架构/07分布式事务/分布式事务" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      docs/架构/架构/07分布式事务/分布式事务
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" class="article-date">
+	  <time datetime="2020-06-28T08:46:29.540Z" itemprop="datePublished">2020-06-28</time>
+	</a>
+</span>
+        
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/#comments" class="article-comment-link">Comments</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h1 id="07-分布式事务"><a href="#07-分布式事务" class="headerlink" title="07 分布式事务"></a>07 分布式事务</h1><p><a href="https://blog.csdn.net/skyesx/article/details/82834439" target="_blank" rel="noopener">如何选择分布式事务形态（TCC、SAGA、补偿、基于消息的最终一致等等）</a></p>
+<p><a href="https://blog.csdn.net/qq_27384769/article/details/79302497" target="_blank" rel="noopener">分布式事务</a></p>
+<h3 id="数据不一致的原因"><a href="#数据不一致的原因" class="headerlink" title="数据不一致的原因"></a>数据不一致的原因</h3><ul>
+<li>多份数据<ul>
+<li>多个领域服务</li>
+<li>多个DB</li>
+<li>DB + 缓存</li>
+</ul>
+</li>
+</ul>
+<h3 id="分布式事务分类"><a href="#分布式事务分类" class="headerlink" title="分布式事务分类"></a>分布式事务分类</h3><ul>
+<li>刚性分布式事务<ul>
+<li>强一致性</li>
+<li>XA 模型 - ACID</li>
+<li>CAP - &gt; CP</li>
+</ul>
+</li>
+<li>柔性分布式事务<ul>
+<li>最终一致性</li>
+<li>CAP，BASE理论<br>  ＋ AP</li>
+</ul>
+</li>
+</ul>
+<h3 id="强一致性"><a href="#强一致性" class="headerlink" title="强一致性"></a>强一致性</h3><ul>
+<li>角色<ul>
+<li>AX ：定义事务的边界</li>
+<li>RX : 管理各个资源</li>
+<li>TX ：管理AX定义边界，需要各个RX的事务</li>
+</ul>
+</li>
+<li>2PC<ul>
+<li>过程:是TM发起prepare投票，各个RM都同意后，TM发起提交，不允许rollback,</li>
+<li>缺点：同步堵塞，锁定时间太长，</li>
+</ul>
+</li>
+</ul>
+<h3 id="柔性分布式事务"><a href="#柔性分布式事务" class="headerlink" title="柔性分布式事务"></a>柔性分布式事务</h3><ul>
+<li>CAP</li>
+<li>BASE 基本可用，柔性状态，最终一致性</li>
+<li>典型架构实现<ul>
+<li>TCC模型</li>
+<li>Saga模型 </li>
+</ul>
+</li>
+</ul>
+<h4 id="基于消息的事务设计"><a href="#基于消息的事务设计" class="headerlink" title="基于消息的事务设计"></a>基于消息的事务设计</h4><h5 id="适用性"><a href="#适用性" class="headerlink" title="适用性"></a>适用性</h5><p>基于消息实现的事务适用于分布式事务的提交或回滚只取决于事务发起方的业务需求，其他数据源的数据变更跟随发起方进行的业务场景。其他数据源的服务没有校验，没有资源约束。肯定成功。</p>
+<p>消除分布式事务，核心业务事务控制，非核心通过消息等异步进行处理，来消除分布式事务。</p>
+<p>需要解决的问题</p>
+<ul>
+<li><p>消息发送的一致性（发送成功）</p>
+<ul>
+<li><p>方案1 MQ提供类似XA的分布式事务功能，达到最终一致</p>
+<ol>
+<li><p>发送半消息消息</p>
+</li>
+<li><p>收到半消息发送成功</p>
+</li>
+<li><p>执行本地事务 </p>
+</li>
+<li><p><strong>commit/rollback 二次确认</strong></p>
+</li>
+<li><p>MQ决定是否投递消息.</p>
+</li>
+<li><p>消息回查： MQ server有定时查询半消息，调用业务方会查消息是否完成。</p>
+<p>实际上是两阶段提交理论.</p>
+</li>
+</ol>
+<ul>
+<li><p>名词：</p>
+<ul>
+<li>半消息-暂时不能投递，发送方已经把消息成功的发送到MQ server端，但mq server 服务端还没收到生产者的二次确认。</li>
+<li>消息回查-由于断网，发送方产生的问题，导致MQ Server 的半消息的二次确认没有收到。MQ server扫描到这样的情况的半消息，会<strong>主动向生产者询问是commit还是rollback</strong></li>
+</ul>
+</li>
+<li><p>需要改造</p>
+<ul>
+<li>MQ server 支持半消息和消息回查。</li>
+<li>业务方提供消息回查接口。</li>
+</ul>
+</li>
+<li><p>优点</p>
+<ul>
+<li>通用</li>
+</ul>
+</li>
+<li><p>缺点</p>
+<ul>
+<li>业务侵入大，需要写消息回查</li>
+<li>MQ server 支持半消息和消息回查。</li>
+<li>消息发送会重复，消费端需要处理幂等。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>方案二：本地事务表</p>
+<ol>
+<li>和本地事务一起保存要发送的Message进入本地数据库messageid, topic, content status 进入</li>
+<li>定时器去不停的轮询读取消息表，并且发送到MQ server</li>
+<li>如果收到server端的ack回执消息，就删除本地消息表</li>
+</ol>
+<ul>
+<li><p>需要改造</p>
+<ul>
+<li>需要建立这样的框架机制，很多开源的框架<br><a href="https://github.com/a327919006/reliable-message" target="_blank" rel="noopener">reliable-message</a><br><a href="https://github.com/Dromara/myth" target="_blank" rel="noopener">myth</a></li>
+<li>消费端要处理消息的幂等问题（重复发送） - 需要分布式锁进行去重</li>
+</ul>
+</li>
+<li><p>优、缺点</p>
+<ul>
+<li>业务侵入小</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>消息投递到消费者失败</p>
+</li>
+<li><p>消费者处理消息失败 </p>
+</li>
+</ul>
+<pre><code>+ 确保消息成功发布: 方案一,类似XA，2PC
+https://blog.csdn.net/lirenzuo/article/details/81275785</code></pre><p>​<br>      +<br>      + 同步</p>
+<h4 id="TCC模型"><a href="#TCC模型" class="headerlink" title="TCC模型"></a>TCC模型</h4><h6 id="try-confirm-cancel"><a href="#try-confirm-cancel" class="headerlink" title="try - confirm - cancel"></a>try - confirm - cancel</h6><p>对于业务系统中一个特定的业务逻辑S，其对外提供服务时，必须接受一些不确定性，即对业务逻辑执行的一次调用仅是一个临时性操作，调用它的消费方服务M保留了后续的取消权。如果M认为全局事务应该rollback，它会要求取消之前的临时性操作，这将对应S的一个取消操作；而当M认为全局事务应该commit时，它会放弃之前临时性操作的取消权，这对应S的一个确认操作。</p>
+<ul>
+<li>try: 进行必要检查，预留必要业务资源，尝试执行业务，</li>
+<li>confirm : 真正执行业务，<strong>不再进行业务检查</strong></li>
+<li>cancel: 释放try阶段预留的业务资源. </li>
+</ul>
+<p>[传统事务机制]的业务逻辑 = [TCC事务机制]的初步操作（Try） + [TCC事务机制]的确认逻辑（Confirm）。<br>TCC事务处理流程和 2PC 二阶段提交类似，不过 2PC通常都是在跨库的DB层面，而TCC本质就是一个应用层面的2PC。</p>
+<h6 id="关键点就在于"><a href="#关键点就在于" class="headerlink" title="关键点就在于"></a>关键点就在于</h6><ul>
+<li>要预留必要业务资源。<br> 核心就是要把业务资源冻结掉，因为在confirm阶段将不再进行检查，必须把所需的资源都冻结掉，在整个事务过程中，冻结的结果对外是可见的，而新增的资源是可见但不可操作的。<ul>
+<li>对于要消耗的资源：扣除资源，并划入冻结中（另外字段）</li>
+<li>对于要新增的资源：进行相关检查，并进入unknown状态。之后该事务可以进行后续处理。</li>
+<li>对于更改的资源: 进行相关检查，并进入unknown状态。之后该事务可以进行后续处理。</li>
+</ul>
+</li>
+</ul>
+<h6 id="TCC-优缺点"><a href="#TCC-优缺点" class="headerlink" title="TCC 优缺点"></a>TCC 优缺点</h6><ul>
+<li><p>TCC优点：</p>
+<ul>
+<li>让应用自己定义数据库操作的粒度，使得降低锁冲突、提高吞吐量成为可能。</li>
+<li>因为业务会冻结了数据，不存在上述脏数据的问题；</li>
+</ul>
+</li>
+<li><p>TCC不足之处：<br> 对应用的侵入性强。业务逻辑的每个分支都需要实现try、confirm、cancel三个操作，应用侵入性较强，改造成本高。<br> 实现难度较大。需要按照网络状态、系统故障等不同的失败原因实现不同的回滚策略。为了满足一致性的要求，confirm和cancel接口必须实现幂等。</p>
+<p><a href="https://www.liangzl.com/get-article-detail-525.html" target="_blank" rel="noopener">https://www.liangzl.com/get-article-detail-525.html</a><br><a href="https://blog.csdn.net/zheng199172/article/details/82463499" target="_blank" rel="noopener">https://blog.csdn.net/zheng199172/article/details/82463499</a><br><a href="https://www.cnblogs.com/jajian/p/10014145.html" target="_blank" rel="noopener">https://www.cnblogs.com/jajian/p/10014145.html</a>  </p>
+</li>
+</ul>
+<h5 id="Saga模型"><a href="#Saga模型" class="headerlink" title="Saga模型"></a>Saga模型</h5><p><a href="https://www.jianshu.com/p/e4b662407c66" target="_blank" rel="noopener">分布式事务：Saga模式</a><br><a href="https://www.jianshu.com/p/ebfc51ea1fe3" target="_blank" rel="noopener">数据：Saga模式</a><br><a href="http://servicecomb.apache.org/cn/docs/distributed-transactions-saga-implementation/" target="_blank" rel="noopener">servicecomb Saga分布式事务解决方案与实践</a></p>
+<ul>
+<li><p>Saga简介 </p>
+<ul>
+<li><p>原理<br>  把分布式事务拆分成多个本地事务，本地提供相应的执行模块和补偿模块。</p>
+</li>
+<li><p>方案</p>
+</li>
+<li><p>具体方案1 集中式协调器的实现方式 Choreography<br><img src="Saga-%E9%9B%86%E4%B8%AD%E5%BC%8F%E7%9A%84Saga%E5%AE%9E%E7%8E%B0.jpeg" alt=""><br> 集中式的Saga实现一般是通过一个Saga对象来追踪所有的Saga子任务的调用情况， 根据调用情况来决定是否需要调用对应的补偿方面，协调器和调用方是在一个进程中的。</p>
+<ol>
+<li>通过proxy来调用其他服务</li>
+<li>Proxy先生成transaction id</li>
+<li>proxy先把调用服务和参数存储到数据库中</li>
+<li>如果成功就调用下一个服务</li>
+<li>如果失败，记录下来，然后由定时来扫描失败的的操作 （fast fail）</li>
+<li>单独schedule, 查找调用链路，调用业务反向补偿。<ol start="7">
+<li>业务提供补偿的方法，幂等性一定要保证。<ul>
+<li>范例</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>1. Order Service创建一个pending状态的订单，并创建一个CreateOrderSaga
+2. CreateOrderSaga往Customer Service发送ReserveCredit命令
+3. Customer Service尝试验证订单信用，并发送一个回复
+4. CreateOrderSaga接收回复，往Order Service发送ApproveOrder或者RejectOrder命令    
+5. Order Service修改订单的状态为approved或者cancelled</code></pre><ul>
+<li><p>具体方案2 分布式的实现方式。 Choreography</p>
+<ul>
+<li><p>分布式的Saga 一般是采用事件驱动方式让参与的服务方进行相关的交互。相关的业务方只需要订阅相关的领域事件即可。 Chirs提供了基于事件溯源的实现，同时axonframework也提供了相关的实现，详细的内容大家可以参考上面的链接。<br><img src="Saga-%E5%88%86%E5%B8%83%E5%BC%8F%E7%9A%84Saga%E5%AE%9E%E7%8E%B0.jpeg" alt=""></p>
+<ol>
+<li>Order Service创建一个pending状态的订单，并发布OrderCreated事件</li>
+<li>Customer Service收到事件，尝试验证订单的信用。它发起Credit Reserved事件或者Credit Limit Exceeded事件</li>
+<li>Order Service收到事件，将订单状态修改为approved或者cancelled</li>
+</ol>
+</li>
+<li><p>分布式saga实现的好处： 采用事件源的方式降低系统复杂程度，提升系统扩展性， 处理模块通过订阅事件的方式降低系统的耦合程度。当然这也的实现也有一些问题： saga系统会涉及大量的业务事件，这样会对编码和调试会带来一些问题；还有就是相关的业务逻辑处理是基于事件，相关事件处理模块可能会有循环依赖的问题。</p>
+</li>
+<li><p>因为saga事务没有准备阶段，事务没有隔离，如果两个saga事务同时操作同一资源就会遇到我们操作多线程临界资源的的情况。因此会产生更新丢失，脏数据读取等问题。      </p>
+</li>
+<li><p>具体方案</p>
+<ul>
+<li>通过proxy来记录请求调用链和相应参数</li>
+<li>基于异步补偿机制的分布式事务 （fast fall, 快速反馈错误，补偿异步慢慢做）. 补偿通过向后恢复的方式。</li>
+<li>提供<strong>幂等</strong>的补偿接口   </li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>隔离层控制：应用层通过加锁或预先冻结资源来完成。</p>
+</li>
+<li><p>恢复方式</p>
+<ul>
+<li>向后恢复：rollback,补偿掉已经完成的事务。（主要）</li>
+<li>向前恢复：重试失败的事务。<ul>
+<li>实践</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>柔性事务：</p>
+<ul>
+<li>Saga : 分布式事务 -&gt; 各个短事务</li>
+<li></li>
+</ul>
+</li>
+</ul>
+<h4 id="何时选择单机事务？"><a href="#何时选择单机事务？" class="headerlink" title="何时选择单机事务？"></a>何时选择单机事务？</h4><ul>
+<li>单机事务</li>
+<li>基于消息实现的事务: 基于消息实现的事务适用于分布式事务的提交或回滚只取决于事务发起方的业务需求，其他数据源的数据变更跟随发起方进行的业务场景。其他数据源的服务没有校验，没有资源约束。肯定成功</li>
+</ul>
+<p>一致性： 记录错误日志，报警，人工介入。</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/" title="docs/架构/架构/07分布式事务/分布式事务" target="_blank" rel="external">http://yoursite.com/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/07%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/%E5%88%86%E5%B8%83%E5%BC%8F%E4%BA%8B%E5%8A%A1/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/11%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/%E6%B3%A8%E5%86%8C%E4%B8%AD%E5%BF%83/" title="docs/架构/架构/11注册中心/注册中心"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;Newer</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2020/06/28/docs/%E6%9E%B6%E6%9E%84/%E6%9E%B6%E6%9E%84/08%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7/%E6%9C%8D%E5%8A%A1%E9%99%8D%E7%BA%A7/" title="docs/架构/架构/08服务降级/服务降级"><span>Older&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>$</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>Maybe you could buy me a cup of coffee.</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open alipay app scan this qrcode, buy me a coffee!</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="Scan Qrcode" title="Scan" />
+              </div>
+              <p class="text-muted mv">Scan this qrcode</p>
+              <p class="text-grey">Open wechat app scan this qrcode, buy me a coffee!</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> alipay</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> wechat payment</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: 'Posts',
+            PAGES: 'Pages',
+            CATEGORIES: 'Categories',
+            TAGS: 'Tags',
+            UNTITLED: '(Untitled)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
